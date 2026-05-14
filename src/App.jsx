@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import './App.css'
 import BatchRecipe from './components/BatchRecipe'
 import CostTracking from './components/CostTracking'
@@ -178,6 +178,18 @@ export default function App() {
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
   const [loadMenuOpen, setLoadMenuOpen] = useState(false)
   const [saveFlash, setSaveFlash] = useState(false)
+  const loadMenuRef = useRef(null)
+
+  useEffect(() => {
+    if (!loadMenuOpen) return
+    const handler = (e) => {
+      if (loadMenuRef.current && !loadMenuRef.current.contains(e.target)) {
+        setLoadMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [loadMenuOpen])
 
   const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix), [recipe, costs, pricing, mix])
 
@@ -256,7 +268,7 @@ export default function App() {
               >
                 {saveFlash ? '✓ Saved' : '💾 Save'}
               </button>
-              <div className="relative">
+              <div className="relative" ref={loadMenuRef}>
                 <button
                   onClick={() => setLoadMenuOpen(o => !o)}
                   className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
@@ -269,10 +281,10 @@ export default function App() {
                       <p className="text-slate-400 text-xs px-3 py-2">No saved batches yet</p>
                     ) : savedNames.map(name => (
                       <div key={name} className="flex items-center justify-between hover:bg-slate-700 px-3 py-2 cursor-pointer"
-                        onClick={() => loadBatch(name)}>
+                        onMouseDown={() => loadBatch(name)}>
                         <span className="text-sm text-slate-200 truncate">{name}</span>
                         <button
-                          onClick={e => deleteBatch(name, e)}
+                          onMouseDown={e => { e.stopPropagation(); deleteBatch(name, e) }}
                           className="ml-3 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:bg-red-500 hover:text-white text-sm font-bold transition-colors"
                           title="Delete"
                         >×</button>
@@ -304,10 +316,6 @@ export default function App() {
           </div>
         </div>
       </header>
-
-      {loadMenuOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setLoadMenuOpen(false)} />
-      )}
 
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex border-b border-slate-700 mt-1">
