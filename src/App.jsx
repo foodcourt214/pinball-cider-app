@@ -231,10 +231,16 @@ export default function App() {
   const loadBatch = (name) => {
     const b = savedBatches[name]
     if (!b) return
-    setRecipe(b.recipe)
+    // Migrate old batches missing shipping fields
+    const recipe = {
+      ...b.recipe,
+      appleVarieties: (b.recipe.appleVarieties || []).map(v => ({ shipping: '', ...v })),
+      adjuncts: (b.recipe.adjuncts || []).map(a => ({ shipping: '', ...a })),
+    }
+    setRecipe(recipe)
     setCosts(b.costs)
     setPricing(b.pricing)
-    setMix(b.mix)
+    setMix({ finalGallons: '', ...(b.mix || {}) })
     if (b.channelMix) setChannelMix(b.channelMix)
     setLoadMenuOpen(false)
   }

@@ -128,7 +128,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                       <td className="py-1.5 pr-2">
                         <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
                           <span className="pl-1.5 text-slate-400 text-xs">$</span>
-                          <input type="number" min="0" step="0.01" value={v.shipping}
+                          <input type="number" min="0" step="0.01" value={v.shipping ?? ''}
                             onChange={e => updateVariety(v.id, 'shipping', e.target.value)}
                             placeholder="0.00"
                             className="bg-transparent px-1 py-1 text-sm text-slate-100 outline-none w-16 text-right" />
@@ -216,7 +216,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                     <td className="py-1.5 pr-2">
                       <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400 justify-end">
                         <span className="pl-1.5 text-slate-400 text-xs">$</span>
-                        <input type="number" min="0" step="0.01" value={a.shipping}
+                        <input type="number" min="0" step="0.01" value={a.shipping ?? ''}
                           onChange={e => updateAdjunct(a.id, 'shipping', e.target.value)}
                           placeholder="0.00"
                           className="bg-transparent px-1 py-1 text-sm text-slate-100 outline-none w-20 text-right" />
