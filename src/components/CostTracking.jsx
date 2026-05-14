@@ -189,7 +189,9 @@ export default function CostTracking({ costs, setCosts, calc }) {
           <div>
             <p className="text-xs text-slate-500 mb-2 font-medium uppercase tracking-wide">Batch-wide costs</p>
             <CogsRow label="Apple Ingredients" value={calc.appleCost} />
+            <CogsRow label="Apple Shipping" value={calc.appleShipping} />
             <CogsRow label="Adjuncts" value={calc.adjunctCost} />
+            <CogsRow label="Adjunct Shipping" value={calc.adjunctShipping} />
             <CogsRow label="Cold Storage" value={costs.coldStorage} />
             <CogsRow label="State Excise Tax" value={costs.stateExciseTax} />
             <CogsRow label="TTB Tax" value={costs.ttbTax} />

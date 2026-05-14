@@ -14,12 +14,12 @@ export const INITIAL_RECIPE = {
   og: '1.060',
   sg: '1.000',
   appleVarieties: [
-    { id: 1, variety: 'Cullinary', gallons: 320, costPerGallon: 3.17 },
-    { id: 2, variety: 'Heirloom', gallons: 106, costPerGallon: 6.50 },
+    { id: 1, variety: 'Cullinary', gallons: 320, costPerGallon: 3.17, shipping: '' },
+    { id: 2, variety: 'Heirloom', gallons: 106, costPerGallon: 6.50, shipping: '' },
   ],
   adjuncts: [
-    { id: 1, name: 'Acai', amount: '', unit: 'lbs', costPerUnit: '' },
-    { id: 2, name: 'Yuzu', amount: '', unit: 'lbs', costPerUnit: '' },
+    { id: 1, name: 'Acai', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' },
+    { id: 2, name: 'Yuzu', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' },
   ],
 }
 
@@ -81,9 +81,16 @@ export function calcBatch(recipe, costs, pricing, mix) {
   const appleCost = recipe.appleVarieties.reduce(
     (sum, v) => sum + (parseFloat(v.gallons) || 0) * (parseFloat(v.costPerGallon) || 0), 0
   )
+  const appleShipping = recipe.appleVarieties.reduce(
+    (sum, v) => sum + (parseFloat(v.shipping) || 0), 0
+  )
   const adjunctCost = (recipe.adjuncts || []).reduce(
     (sum, a) => sum + (parseFloat(a.amount) || 0) * (parseFloat(a.costPerUnit) || 0), 0
   )
+  const adjunctShipping = (recipe.adjuncts || []).reduce(
+    (sum, a) => sum + (parseFloat(a.shipping) || 0), 0
+  )
+  const totalShipping = appleShipping + adjunctShipping
 
   const caseGallons = gallons * (mix.casePct / 100)
   const sixthGallons = gallons * (mix.sixthPct / 100)
@@ -111,7 +118,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
 
   // Batch-wide lump sums allocated per total gallon (applied to ALL formats)
   const batchLumpSums = costs.coldStorage + costs.stateExciseTax + costs.ttbTax
-  const totalBatchFixed = appleCost + adjunctCost + batchLumpSums
+  const totalBatchFixed = appleCost + appleShipping + adjunctCost + adjunctShipping + batchLumpSums
   const batchFixedPerGal = gallons > 0 ? totalBatchFixed / gallons : 0
 
   // Canning-only per-gallon cost (labor + velcorin + contract fee)
@@ -150,7 +157,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
   const grossMarginPct = totalRevenuePTW > 0 ? ((totalProfitPTW / totalRevenuePTW) * 100).toFixed(1) : 0
 
   return {
-    abv, appleCost, adjunctCost,
+    abv, appleCost, appleShipping, adjunctCost, adjunctShipping, totalShipping,
     canningLaborCost, contractFeeTotal, velcorinTotal,
     labelCostTotal, labelCostPerCase, totalCanCount,
     batchLumpSums, totalBatchFixed, batchFixedPerGal,

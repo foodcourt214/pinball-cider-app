@@ -32,7 +32,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
   const updateVariety = (id, key, val) =>
     setRecipe(r => ({ ...r, appleVarieties: r.appleVarieties.map(v => v.id === id ? { ...v, [key]: val } : v) }))
   const addVariety = () => {
-    setRecipe(r => ({ ...r, appleVarieties: [...r.appleVarieties, { id: nextAppleId, variety: '', lbs: '', costPerLb: '' }] }))
+    setRecipe(r => ({ ...r, appleVarieties: [...r.appleVarieties, { id: nextAppleId, variety: '', gallons: '', costPerGallon: '', shipping: '' }] }))
     setNextAppleId(n => n + 1)
   }
   const removeVariety = id => setRecipe(r => ({ ...r, appleVarieties: r.appleVarieties.filter(v => v.id !== id) }))
@@ -41,7 +41,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
   const updateAdjunct = (id, key, val) =>
     setRecipe(r => ({ ...r, adjuncts: r.adjuncts.map(a => a.id === id ? { ...a, [key]: val } : a) }))
   const addAdjunct = () => {
-    setRecipe(r => ({ ...r, adjuncts: [...r.adjuncts, { id: nextAdjunctId, name: '', amount: '', unit: 'lbs', costPerUnit: '' }] }))
+    setRecipe(r => ({ ...r, adjuncts: [...r.adjuncts, { id: nextAdjunctId, name: '', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' }] }))
     setNextAdjunctId(n => n + 1)
   }
   const removeAdjunct = id => setRecipe(r => ({ ...r, adjuncts: r.adjuncts.filter(a => a.id !== id) }))
@@ -95,6 +95,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                   <th className="text-right pb-2">% Blend</th>
                   <th className="text-right pb-2">$/gal</th>
                   <th className="text-right pb-2">Cost</th>
+                  <th className="text-right pb-2">Shipping</th>
                   <th className="pb-2"></th>
                 </tr>
               </thead>
@@ -124,6 +125,15 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                         </div>
                       </td>
                       <td className="py-1.5 pr-2 text-right text-slate-300">${lineCost.toFixed(2)}</td>
+                      <td className="py-1.5 pr-2">
+                        <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
+                          <span className="pl-1.5 text-slate-400 text-xs">$</span>
+                          <input type="number" min="0" step="0.01" value={v.shipping}
+                            onChange={e => updateVariety(v.id, 'shipping', e.target.value)}
+                            placeholder="0.00"
+                            className="bg-transparent px-1 py-1 text-sm text-slate-100 outline-none w-16 text-right" />
+                        </div>
+                      </td>
                       <td className="py-1.5">
                         <button onClick={() => removeVariety(v.id)}
                           className="text-slate-500 hover:text-red-400 text-lg leading-none px-1">×</button>
@@ -137,6 +147,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                   <td className="pt-2 text-right text-slate-300">100%</td>
                   <td></td>
                   <td className="pt-2 text-right text-amber-400 font-semibold">${calc.appleCost.toFixed(2)}</td>
+                  <td className="pt-2 text-right text-amber-400 font-semibold">${calc.appleShipping.toFixed(2)}</td>
                   <td></td>
                 </tr>
               </tbody>
@@ -166,6 +177,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                 <th className="text-left pb-2 pl-2">Unit</th>
                 <th className="text-right pb-2">Cost / unit</th>
                 <th className="text-right pb-2">Total Cost</th>
+                <th className="text-right pb-2">Shipping</th>
                 <th className="pb-2"></th>
               </tr>
             </thead>
@@ -201,6 +213,15 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                       </div>
                     </td>
                     <td className="py-1.5 pr-2 text-right text-slate-300">${lineCost.toFixed(2)}</td>
+                    <td className="py-1.5 pr-2">
+                      <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400 justify-end">
+                        <span className="pl-1.5 text-slate-400 text-xs">$</span>
+                        <input type="number" min="0" step="0.01" value={a.shipping}
+                          onChange={e => updateAdjunct(a.id, 'shipping', e.target.value)}
+                          placeholder="0.00"
+                          className="bg-transparent px-1 py-1 text-sm text-slate-100 outline-none w-20 text-right" />
+                      </div>
+                    </td>
                     <td className="py-1.5">
                       <button onClick={() => removeAdjunct(a.id)}
                         className="text-slate-500 hover:text-red-400 text-lg leading-none px-1">×</button>
@@ -211,6 +232,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
               <tr className="text-xs">
                 <td className="pt-2 text-slate-400 font-medium" colSpan={4}>Total Adjunct Cost</td>
                 <td className="pt-2 text-right text-amber-400 font-semibold">${calc.adjunctCost.toFixed(2)}</td>
+                <td className="pt-2 text-right text-amber-400 font-semibold">${calc.adjunctShipping.toFixed(2)}</td>
                 <td></td>
               </tr>
             </tbody>
