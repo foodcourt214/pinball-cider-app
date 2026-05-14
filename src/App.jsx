@@ -215,7 +215,7 @@ export default function App() {
     const s = blend(calc.sixthCount, calc.sixthProfit.cogsTotal, pricing.sixthPTW, pricing.sixthPTR, channelMix.sixthPtwPct)
     const h = blend(calc.halfCount, calc.halfProfit.cogsTotal, pricing.halfPTW, pricing.halfPTR, channelMix.halfPtwPct)
     const totalRevenue = c.revenue + s.revenue + h.revenue
-    const totalProfit = c.profit + s.profit + h.profit
+    const totalProfit = totalRevenue - calc.totalCOGS
     const totalMargin = totalRevenue > 0 ? (totalProfit / totalRevenue * 100).toFixed(1) : 0
     return { case: c, sixth: s, half: h, totalRevenue, totalProfit, totalMargin }
   }, [calc, channelMix, pricing])
