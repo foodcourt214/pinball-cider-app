@@ -56,19 +56,27 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
           <h2 className="text-base font-semibold text-amber-400 mb-4">Batch Details</h2>
           <div className="space-y-3">
             <Field label="Batch Name" value={recipe.batchName} onChange={v => update('batchName', v)} />
-            <Field label="Total Gallons" value={recipe.totalGallons} onChange={v => update('totalGallons', v)}
-              type="number" step="0.5" min="0" suffix="gal" />
+            <Field label="Apple Yield" value={recipe.lbsPerGallon} onChange={v => update('lbsPerGallon', v)}
+              type="number" step="0.5" min="0.1" suffix="lbs/gal"
+              note="Lbs of apples per gallon of juice (typically 12–18)" />
             <Field label="Original Gravity (OG)" value={recipe.og} onChange={v => update('og', v)}
               type="number" step="0.001" min="1.000" note="e.g. 1.060" />
             <Field label="Final Specific Gravity (SG)" value={recipe.sg} onChange={v => update('sg', v)}
               type="number" step="0.001" min="1.000" note="e.g. 1.000 for fully dry" />
           </div>
 
-          {/* ABV display */}
-          <div className="mt-4 bg-slate-700/50 rounded p-3 text-center">
-            <div className="text-2xl font-bold text-amber-400">{calc.abv}%</div>
-            <div className="text-xs text-slate-400">Estimated ABV</div>
-            <div className="text-xs text-slate-500 mt-0.5">(OG − SG) × 131.25</div>
+          {/* Calculated totals */}
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="bg-slate-700/50 rounded p-3 text-center">
+              <div className="text-xl font-bold text-blue-400">{calc.gallons.toFixed(1)}</div>
+              <div className="text-xs text-slate-400">Total Gallons</div>
+              <div className="text-xs text-slate-500">{calc.totalLbs} lbs ÷ {recipe.lbsPerGallon}</div>
+            </div>
+            <div className="bg-slate-700/50 rounded p-3 text-center">
+              <div className="text-xl font-bold text-amber-400">{calc.abv}%</div>
+              <div className="text-xs text-slate-400">Est. ABV</div>
+              <div className="text-xs text-slate-500">(OG − SG) × 131.25</div>
+            </div>
           </div>
         </div>
 
@@ -222,7 +230,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
             { label: 'Apple Cost', value: `$${calc.appleCost.toFixed(2)}`, color: 'text-red-400' },
             { label: 'Adjunct Cost', value: `$${calc.adjunctCost.toFixed(2)}`, color: 'text-red-400' },
             { label: 'COGS / Gallon', value: `$${calc.cogsPerGallon.toFixed(2)}`, color: 'text-red-400' },
-            { label: 'Total Gallons', value: `${recipe.totalGallons} gal`, color: 'text-blue-400' },
+            { label: 'Total Gallons', value: `${calc.gallons.toFixed(1)} gal`, color: 'text-blue-400' },
           ].map(stat => (
             <div key={stat.label} className="bg-slate-700/50 rounded p-3 text-center">
               <div className={`text-xl font-bold ${stat.color}`}>{stat.value}</div>

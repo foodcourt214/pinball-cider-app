@@ -11,7 +11,7 @@ export const HALF_GAL = 15.5   // 1/2 barrel
 
 export const INITIAL_RECIPE = {
   batchName: 'Acai Yuzu',
-  totalGallons: 426,
+  lbsPerGallon: 14,
   og: '1.060',
   sg: '1.000',
   appleVarieties: [
@@ -74,7 +74,9 @@ function loadSavedBatches() {
 }
 
 export function calcBatch(recipe, costs, pricing, mix) {
-  const gallons = parseFloat(recipe.totalGallons) || 0
+  const totalLbs = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.lbs) || 0), 0)
+  const lbsPerGallon = parseFloat(recipe.lbsPerGallon) || 14
+  const gallons = lbsPerGallon > 0 ? totalLbs / lbsPerGallon : 0
   const og = parseFloat(recipe.og) || 1.0
   const sg = parseFloat(recipe.sg) || 1.0
   const abv = ((og - sg) * 131.25).toFixed(1)
@@ -157,6 +159,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
     batchLumpSums, totalBatchFixed, batchFixedPerGal,
     canningOnlyPerGal, canningCostPerCase,
     directCaseCost, directKegCost, totalCOGS,
+    totalLbs, gallons,
     cogsPerGallon: batchFixedPerGal, cogsPerCase, cogsPerSixth, cogsPerHalf,
     caseCount, sixthCount, halfCount,
     caseGallons, sixthGallons, halfGallons,
