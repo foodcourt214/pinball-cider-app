@@ -117,17 +117,35 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
             <h2 className="text-base font-semibold text-amber-400">Format Mix</h2>
             <p className="text-xs text-slate-500 mt-0.5">What % of the batch goes to each package format</p>
           </div>
-          <span className="text-xs text-slate-400">{Math.round(calc.gallons || 0)} total gal</span>
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <div className="text-xs text-slate-500">Ordered</div>
+              <div className="text-xs text-slate-400">{Math.round(calc.gallons || 0)} gal</div>
+            </div>
+            <div className="flex flex-col items-end gap-0.5">
+              <label className="text-xs text-slate-500">Final gallons (after loss)</label>
+              <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
+                <input
+                  type="number" min="0" step="1"
+                  value={mix.finalGallons}
+                  onChange={e => setMix(m => ({ ...m, finalGallons: e.target.value }))}
+                  placeholder={Math.round(calc.gallons || 0)}
+                  className="bg-transparent px-2 py-1 text-sm text-slate-100 outline-none w-24 text-right"
+                />
+                <span className="pr-2 text-slate-400 text-xs">gal</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Slider label="Cases (24 × 16oz)" icon="🥤" pct={mix.casePct}
-            sub={`${calc.caseCount} cases · ${calc.caseGallons.toFixed(0)} gal`}
+            sub={`${calc.caseCount} cases · ${Math.round(calc.caseGallons)} gal`}
             onChange={v => handleMixChange('casePct', v)} color="#f59e0b" />
           <Slider label="1/6 Bbl Kegs" icon="🛢️" pct={mix.sixthPct}
-            sub={`${calc.sixthCount} kegs · ${calc.sixthGallons.toFixed(0)} gal`}
+            sub={`${calc.sixthCount} kegs · ${Math.round(calc.sixthGallons)} gal`}
             onChange={v => handleMixChange('sixthPct', v)} color="#3b82f6" />
           <Slider label="1/2 Bbl Kegs" icon="🛢️" pct={mix.halfPct}
-            sub={`${calc.halfCount} kegs · ${calc.halfGallons.toFixed(0)} gal`}
+            sub={`${calc.halfCount} kegs · ${Math.round(calc.halfGallons)} gal`}
             onChange={v => handleMixChange('halfPct', v)} color="#8b5cf6" />
         </div>
         <div className="mt-4">

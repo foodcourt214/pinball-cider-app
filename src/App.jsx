@@ -92,9 +92,10 @@ export function calcBatch(recipe, costs, pricing, mix) {
   )
   const totalShipping = appleShipping + adjunctShipping
 
-  const caseGallons = gallons * (mix.casePct / 100)
-  const sixthGallons = gallons * (mix.sixthPct / 100)
-  const halfGallons = gallons * (mix.halfPct / 100)
+  const packagingGallons = parseFloat(mix.finalGallons) > 0 ? parseFloat(mix.finalGallons) : gallons
+  const caseGallons = packagingGallons * (mix.casePct / 100)
+  const sixthGallons = packagingGallons * (mix.sixthPct / 100)
+  const halfGallons = packagingGallons * (mix.halfPct / 100)
 
   const caseCount = Math.floor(caseGallons / CASE_GAL)
   const sixthCount = Math.floor(sixthGallons / SIXTH_GAL)
@@ -163,7 +164,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
     batchLumpSums, totalBatchFixed, batchFixedPerGal,
     canningOnlyPerGal, canningCostPerCase,
     directCaseCost, directKegCost, totalCOGS,
-    gallons,
+    gallons, packagingGallons,
     cogsPerGallon: batchFixedPerGal, cogsPerCase, cogsPerSixth, cogsPerHalf,
     caseCount, sixthCount, halfCount,
     caseGallons, sixthGallons, halfGallons,
@@ -179,7 +180,7 @@ export default function App() {
   const [recipe, setRecipe] = useState(INITIAL_RECIPE)
   const [costs, setCosts] = useState(INITIAL_COSTS)
   const [pricing, setPricing] = useState(INITIAL_PRICING)
-  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15 })
+  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15, finalGallons: '' })
   const [channelMix, setChannelMix] = useState({ casePtwPct: 70, sixthPtwPct: 60, halfPtwPct: 50 })
   const [activeTab, setActiveTab] = useState('recipe')
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
