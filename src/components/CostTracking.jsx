@@ -63,14 +63,6 @@ export default function CostTracking({ costs, setCosts, calc }) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-        {/* Manufacturing */}
-        <Section title="🏭 Manufacturing" badge="Batch lump sum"
-          subtitle="Allocated across all formats proportionally by gallon"
-          total={costs.manufacturing} totalLabel="Manufacturing Total">
-          <CostInput label="Production / Manufacturing" value={costs.manufacturing} onChange={set('manufacturing')}
-            note="Co-packer or in-house production cost" />
-        </Section>
-
         {/* Canning Packaging */}
         <Section title="📦 Canning Packaging" badge="Per case"
           subtitle={`Per case (24 × 16oz = 3 gal) · ${calc.caseCount} cases · total $${(totalPerCase * calc.caseCount).toFixed(2)}`}>
@@ -198,7 +190,6 @@ export default function CostTracking({ costs, setCosts, calc }) {
             <p className="text-xs text-slate-500 mb-2 font-medium uppercase tracking-wide">Batch-wide costs</p>
             <CogsRow label="Apple Ingredients" value={calc.appleCost} />
             <CogsRow label="Adjuncts" value={calc.adjunctCost} />
-            <CogsRow label="Manufacturing" value={costs.manufacturing} />
             <CogsRow label="Cold Storage" value={costs.coldStorage} />
             <CogsRow label="State Excise Tax" value={costs.stateExciseTax} />
             <CogsRow label="TTB Tax" value={costs.ttbTax} />

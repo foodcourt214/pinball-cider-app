@@ -26,9 +26,6 @@ export const INITIAL_RECIPE = {
 
 // Costs structured to match canning invoices
 export const INITIAL_COSTS = {
-  // Manufacturing / production (lump sum per batch)
-  manufacturing: 4500.00,
-
   // Canning packaging — charged per case (24 × 16oz)
   fillServicePerCase: 6.33,
   cansPerCase: 4.56,        // 16oz Standard Brite Can
@@ -114,7 +111,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
   const labelCostPerCase = 24 * (costs.labelCostPerM / 1000)
 
   // Batch-wide lump sums allocated per total gallon (applied to ALL formats)
-  const batchLumpSums = costs.manufacturing + costs.coldStorage + costs.stateExciseTax + costs.ttbTax
+  const batchLumpSums = costs.coldStorage + costs.stateExciseTax + costs.ttbTax
   const totalBatchFixed = appleCost + adjunctCost + batchLumpSums
   const batchFixedPerGal = gallons > 0 ? totalBatchFixed / gallons : 0
 
