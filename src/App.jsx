@@ -249,6 +249,36 @@ export default function App() {
 
   const savedNames = Object.keys(savedBatches)
 
+  const exportBatches = () => {
+    const json = JSON.stringify(savedBatches, null, 2)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'pinball-cider-batches.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const importBatches = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target.result)
+        const merged = { ...savedBatches, ...imported }
+        setSavedBatches(merged)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
+        alert(`Imported ${Object.keys(imported).length} batch(es).`)
+      } catch {
+        alert('Invalid file — could not import.')
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       <header className="border-b border-slate-700 bg-slate-800/80 sticky top-0 z-10">
@@ -293,6 +323,17 @@ export default function App() {
                   </div>
                 )}
               </div>
+              {/* Export / Import */}
+              <button onClick={exportBatches}
+                className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
+                title="Download all saved batches as JSON">
+                ⬇ Export
+              </button>
+              <label className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 cursor-pointer"
+                title="Import batches from JSON file">
+                ⬆ Import
+                <input type="file" accept=".json" onChange={importBatches} className="hidden" />
+              </label>
             </div>
           </div>
 
