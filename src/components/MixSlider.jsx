@@ -102,7 +102,7 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
       next[otherKeys[0]] = Math.round((mix[otherKeys[0]] / currentSum) * remaining)
       next[otherKeys[1]] = remaining - next[otherKeys[0]]
     }
-    Object.keys(next).forEach(k => { next[k] = Math.max(0, Math.min(100, next[k])) })
+    ;['casePct', 'sixthPct', 'halfPct'].forEach(k => { next[k] = Math.max(0, Math.min(100, next[k])) })
     setMix(next)
   }
 
