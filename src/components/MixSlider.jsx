@@ -117,7 +117,7 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
             <h2 className="text-base font-semibold text-amber-400">Format Mix</h2>
             <p className="text-xs text-slate-500 mt-0.5">What % of the batch goes to each package format</p>
           </div>
-          <span className="text-xs text-slate-400">{calc.gallons.toFixed(0)} total gal</span>
+          <span className="text-xs text-slate-400">{Math.round(calc.gallons || 0)} total gal</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Slider label="Cases (24 × 16oz)" icon="🥤" pct={mix.casePct}
