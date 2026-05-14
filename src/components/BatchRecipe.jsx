@@ -20,7 +20,7 @@ function Field({ label, value, onChange, type = 'text', step, min, suffix, note 
   )
 }
 
-const UNITS = ['lbs', 'oz', 'kg', 'g', 'gal', 'L', 'mL', 'fl oz']
+const UNITS = ['lbs', 'oz', 'kg', 'g', 'gal', 'L', 'mL', 'fl oz', 'pails']
 
 export default function BatchRecipe({ recipe, setRecipe, calc }) {
   const [nextAppleId, setNextAppleId] = useState(3)
