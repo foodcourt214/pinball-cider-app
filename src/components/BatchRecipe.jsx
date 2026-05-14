@@ -46,7 +46,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
   }
   const removeAdjunct = id => setRecipe(r => ({ ...r, adjuncts: r.adjuncts.filter(a => a.id !== id) }))
 
-  const totalLbs = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.lbs) || 0), 0)
+  const totalGallons = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0)
 
   return (
     <div className="space-y-6">
@@ -56,9 +56,6 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
           <h2 className="text-base font-semibold text-amber-400 mb-4">Batch Details</h2>
           <div className="space-y-3">
             <Field label="Batch Name" value={recipe.batchName} onChange={v => update('batchName', v)} />
-            <Field label="Apple Yield" value={recipe.lbsPerGallon} onChange={v => update('lbsPerGallon', v)}
-              type="number" step="0.5" min="0.1" suffix="lbs/gal"
-              note="Lbs of apples per gallon of juice (typically 12–18)" />
             <Field label="Original Gravity (OG)" value={recipe.og} onChange={v => update('og', v)}
               type="number" step="0.001" min="1.000" note="e.g. 1.060" />
             <Field label="Final Specific Gravity (SG)" value={recipe.sg} onChange={v => update('sg', v)}
@@ -70,7 +67,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
             <div className="bg-slate-700/50 rounded p-3 text-center">
               <div className="text-xl font-bold text-blue-400">{calc.gallons.toFixed(1)}</div>
               <div className="text-xs text-slate-400">Total Gallons</div>
-              <div className="text-xs text-slate-500">{calc.totalLbs} lbs ÷ {recipe.lbsPerGallon}</div>
+              <div className="text-xs text-slate-500">sum of varieties</div>
             </div>
             <div className="bg-slate-700/50 rounded p-3 text-center">
               <div className="text-xl font-bold text-amber-400">{calc.abv}%</div>
@@ -94,17 +91,17 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
               <thead>
                 <tr className="text-slate-400 text-xs border-b border-slate-700">
                   <th className="text-left pb-2">Variety</th>
-                  <th className="text-right pb-2">Lbs</th>
+                  <th className="text-right pb-2">Gallons</th>
                   <th className="text-right pb-2">% Blend</th>
-                  <th className="text-right pb-2">$/lb</th>
+                  <th className="text-right pb-2">$/gal</th>
                   <th className="text-right pb-2">Cost</th>
                   <th className="pb-2"></th>
                 </tr>
               </thead>
               <tbody>
                 {recipe.appleVarieties.map(v => {
-                  const pct = totalLbs > 0 ? ((parseFloat(v.lbs) || 0) / totalLbs * 100).toFixed(1) : '0.0'
-                  const lineCost = (parseFloat(v.lbs) || 0) * (parseFloat(v.costPerLb) || 0)
+                  const pct = totalGallons > 0 ? ((parseFloat(v.gallons) || 0) / totalGallons * 100).toFixed(1) : '0.0'
+                  const lineCost = (parseFloat(v.gallons) || 0) * (parseFloat(v.costPerGallon) || 0)
                   return (
                     <tr key={v.id} className="border-b border-slate-700/50">
                       <td className="py-1.5 pr-2">
@@ -113,16 +110,16 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                           className="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm text-slate-100 outline-none focus:border-amber-400 w-full" />
                       </td>
                       <td className="py-1.5 pr-2">
-                        <input type="number" min="0" step="1" value={v.lbs}
-                          onChange={e => updateVariety(v.id, 'lbs', e.target.value)}
+                        <input type="number" min="0" step="1" value={v.gallons}
+                          onChange={e => updateVariety(v.id, 'gallons', e.target.value)}
                           className="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm text-slate-100 outline-none focus:border-amber-400 w-20 text-right" />
                       </td>
                       <td className="py-1.5 pr-2 text-right text-slate-300">{pct}%</td>
                       <td className="py-1.5 pr-2">
                         <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
                           <span className="pl-1.5 text-slate-400 text-xs">$</span>
-                          <input type="number" min="0" step="0.01" value={v.costPerLb}
-                            onChange={e => updateVariety(v.id, 'costPerLb', e.target.value)}
+                          <input type="number" min="0" step="0.01" value={v.costPerGallon}
+                            onChange={e => updateVariety(v.id, 'costPerGallon', e.target.value)}
                             className="bg-transparent px-1 py-1 text-sm text-slate-100 outline-none w-16 text-right" />
                         </div>
                       </td>
@@ -136,7 +133,7 @@ export default function BatchRecipe({ recipe, setRecipe, calc }) {
                 })}
                 <tr className="text-slate-400 text-xs">
                   <td className="pt-2 font-medium">Total</td>
-                  <td className="pt-2 text-right text-slate-300 font-medium">{totalLbs.toFixed(0)} lbs</td>
+                  <td className="pt-2 text-right text-slate-300 font-medium">{totalGallons.toFixed(0)} gal</td>
                   <td className="pt-2 text-right text-slate-300">100%</td>
                   <td></td>
                   <td className="pt-2 text-right text-amber-400 font-semibold">${calc.appleCost.toFixed(2)}</td>

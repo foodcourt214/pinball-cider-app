@@ -11,12 +11,11 @@ export const HALF_GAL = 15.5   // 1/2 barrel
 
 export const INITIAL_RECIPE = {
   batchName: 'Acai Yuzu',
-  lbsPerGallon: 14,
   og: '1.060',
   sg: '1.000',
   appleVarieties: [
-    { id: 1, variety: 'Cullinary', lbs: 320, costPerLb: 3.17 },
-    { id: 2, variety: 'Heirloom', lbs: 106, costPerLb: 6.50 },
+    { id: 1, variety: 'Cullinary', gallons: 320, costPerGallon: 3.17 },
+    { id: 2, variety: 'Heirloom', gallons: 106, costPerGallon: 6.50 },
   ],
   adjuncts: [
     { id: 1, name: 'Acai', amount: '', unit: 'lbs', costPerUnit: '' },
@@ -74,15 +73,13 @@ function loadSavedBatches() {
 }
 
 export function calcBatch(recipe, costs, pricing, mix) {
-  const totalLbs = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.lbs) || 0), 0)
-  const lbsPerGallon = parseFloat(recipe.lbsPerGallon) || 14
-  const gallons = lbsPerGallon > 0 ? totalLbs / lbsPerGallon : 0
+  const gallons = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0)
   const og = parseFloat(recipe.og) || 1.0
   const sg = parseFloat(recipe.sg) || 1.0
   const abv = ((og - sg) * 131.25).toFixed(1)
 
   const appleCost = recipe.appleVarieties.reduce(
-    (sum, v) => sum + (parseFloat(v.lbs) || 0) * (parseFloat(v.costPerLb) || 0), 0
+    (sum, v) => sum + (parseFloat(v.gallons) || 0) * (parseFloat(v.costPerGallon) || 0), 0
   )
   const adjunctCost = (recipe.adjuncts || []).reduce(
     (sum, a) => sum + (parseFloat(a.amount) || 0) * (parseFloat(a.costPerUnit) || 0), 0
@@ -159,7 +156,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
     batchLumpSums, totalBatchFixed, batchFixedPerGal,
     canningOnlyPerGal, canningCostPerCase,
     directCaseCost, directKegCost, totalCOGS,
-    totalLbs, gallons,
+    gallons,
     cogsPerGallon: batchFixedPerGal, cogsPerCase, cogsPerSixth, cogsPerHalf,
     caseCount, sixthCount, halfCount,
     caseGallons, sixthGallons, halfGallons,
