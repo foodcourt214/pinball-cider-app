@@ -24,7 +24,7 @@ export const INITIAL_RECIPE = {
   ],
 }
 
-// Costs structured to match canning invoices — all per-case, lump sums, or per-gallon
+// Costs structured to match canning invoices
 export const INITIAL_COSTS = {
   // Manufacturing / production (lump sum per batch)
   manufacturing: 4500.00,
@@ -36,14 +36,17 @@ export const INITIAL_COSTS = {
   pakTechPerCase: 0.95,     // PakTech 4-pack holders
   traysPerCase: 0.45,       // Trays
 
-  // Labels (lump sum)
-  labelsLumpSum: 185.00,
+  // Labels — auto-calculated from can count ($/1000 labels from Northwest Label invoice)
+  labelCostPerM: 247.96,    // $247.96 per M (per 1000 cans) — $595.10 / 2,400 labels
 
-  // Canning labor
+  // Canning labor (lump sum, allocated to canned gallons only)
   canningLaborRate: 80.00,
   canningLaborHours: 2.5,
 
-  // Services (per gallon)
+  // Contract producer fee (per canned gallon only)
+  contractFeePerGal: 3.23,
+
+  // Velcorin (per canned gallon only — not applied to kegs)
   velcorinPerGal: 1.05,
 
   // Keg costs (all-in: fill + cleaning + storage per keg)
@@ -59,12 +62,12 @@ export const INITIAL_COSTS = {
 }
 
 export const INITIAL_PRICING = {
-  casePTW: 28.00,
-  casePTR: 38.00,
-  sixthPTW: 65.00,
-  sixthPTR: 85.00,
-  halfPTW: 155.00,
-  halfPTR: 195.00,
+  casePTW: 58.00,
+  casePTR: 84.00,
+  sixthPTW: 84.00,
+  sixthPTR: 120.00,
+  halfPTW: 175.00,
+  halfPTR: 250.00,
 }
 
 const STORAGE_KEY = 'pinball-cider-batches'
@@ -86,24 +89,6 @@ export function calcBatch(recipe, costs, pricing, mix) {
     (sum, a) => sum + (parseFloat(a.amount) || 0) * (parseFloat(a.costPerUnit) || 0), 0
   )
 
-  const canningLaborCost = costs.canningLaborRate * costs.canningLaborHours
-
-  // Lump-sum costs allocated proportionally by gallon across all formats
-  const lumpSumCosts = costs.manufacturing + costs.labelsLumpSum + costs.coldStorage +
-    costs.stateExciseTax + costs.ttbTax
-  const totalAllocatedBase = appleCost + adjunctCost + canningLaborCost + lumpSumCosts
-  const allocatedPerGal = gallons > 0 ? totalAllocatedBase / gallons : 0
-
-  // Per-gallon variable services
-  const velcorinPerGal = costs.velcorinPerGal
-
-  // Combined per-gallon rate (allocated + variable)
-  const totalPerGal = allocatedPerGal + velcorinPerGal
-
-  // Direct per-case packaging cost
-  const canningCostPerCase = costs.fillServicePerCase + costs.cansPerCase +
-    costs.endsPerCase + costs.pakTechPerCase + costs.traysPerCase
-
   const caseGallons = gallons * (mix.casePct / 100)
   const sixthGallons = gallons * (mix.sixthPct / 100)
   const halfGallons = gallons * (mix.halfPct / 100)
@@ -112,14 +97,43 @@ export function calcBatch(recipe, costs, pricing, mix) {
   const sixthCount = Math.floor(sixthGallons / SIXTH_GAL)
   const halfCount = Math.floor(halfGallons / HALF_GAL)
 
-  const cogsPerCase = totalPerGal * CASE_GAL + canningCostPerCase
-  const cogsPerSixth = totalPerGal * SIXTH_GAL + costs.sixthBblCost
-  const cogsPerHalf = totalPerGal * HALF_GAL + costs.halfBblCost
+  const totalCanCount = caseCount * 24
 
-  const directPackaging = caseCount * canningCostPerCase +
-    sixthCount * costs.sixthBblCost + halfCount * costs.halfBblCost
-  const velcorinTotal = velcorinPerGal * gallons
-  const totalCOGS = totalAllocatedBase + velcorinTotal + directPackaging
+  // Canning labor (lump sum) — allocated only to canned gallons
+  const canningLaborCost = costs.canningLaborRate * costs.canningLaborHours
+  const canningLaborPerGal = caseGallons > 0 ? canningLaborCost / caseGallons : 0
+
+  // Contract producer fee — per canned gallon only
+  const contractFeeTotal = costs.contractFeePerGal * caseGallons
+
+  // Velcorin — per canned gallon only
+  const velcorinTotal = costs.velcorinPerGal * caseGallons
+
+  // Labels — auto-calculated from total can count ($X per 1000 cans)
+  const labelCostTotal = totalCanCount * (costs.labelCostPerM / 1000)
+  const labelCostPerCase = 24 * (costs.labelCostPerM / 1000)
+
+  // Batch-wide lump sums allocated per total gallon (applied to ALL formats)
+  const batchLumpSums = costs.manufacturing + costs.coldStorage + costs.stateExciseTax + costs.ttbTax
+  const totalBatchFixed = appleCost + adjunctCost + batchLumpSums
+  const batchFixedPerGal = gallons > 0 ? totalBatchFixed / gallons : 0
+
+  // Canning-only per-gallon cost (labor + velcorin + contract fee)
+  const canningOnlyPerGal = canningLaborPerGal + costs.velcorinPerGal + costs.contractFeePerGal
+
+  // Per-case direct packaging (all can/canning costs, labels included)
+  const canningCostPerCase = costs.fillServicePerCase + costs.cansPerCase +
+    costs.endsPerCase + costs.pakTechPerCase + costs.traysPerCase + labelCostPerCase
+
+  // COGS per unit — kegs only get batch-fixed allocation, no canning costs
+  const cogsPerCase = (batchFixedPerGal + canningOnlyPerGal) * CASE_GAL + canningCostPerCase
+  const cogsPerSixth = batchFixedPerGal * SIXTH_GAL + costs.sixthBblCost
+  const cogsPerHalf = batchFixedPerGal * HALF_GAL + costs.halfBblCost
+
+  const directCaseCost = caseCount * canningCostPerCase
+  const directKegCost = sixthCount * costs.sixthBblCost + halfCount * costs.halfBblCost
+  const totalCOGS = totalBatchFixed + canningLaborCost + contractFeeTotal + velcorinTotal +
+    directCaseCost + directKegCost
 
   const fmt = (count, cogs, ptw, ptr) => ({
     ptw: count * ptw - count * cogs,
@@ -140,10 +154,13 @@ export function calcBatch(recipe, costs, pricing, mix) {
   const grossMarginPct = totalRevenuePTW > 0 ? ((totalProfitPTW / totalRevenuePTW) * 100).toFixed(1) : 0
 
   return {
-    abv, appleCost, adjunctCost, canningLaborCost, lumpSumCosts,
-    totalAllocatedBase, allocatedPerGal, velcorinTotal,
-    canningCostPerCase, directPackaging, totalCOGS,
-    cogsPerGallon: totalPerGal, cogsPerCase, cogsPerSixth, cogsPerHalf,
+    abv, appleCost, adjunctCost,
+    canningLaborCost, contractFeeTotal, velcorinTotal,
+    labelCostTotal, labelCostPerCase, totalCanCount,
+    batchLumpSums, totalBatchFixed, batchFixedPerGal,
+    canningOnlyPerGal, canningCostPerCase,
+    directCaseCost, directKegCost, totalCOGS,
+    cogsPerGallon: batchFixedPerGal, cogsPerCase, cogsPerSixth, cogsPerHalf,
     caseCount, sixthCount, halfCount,
     caseGallons, sixthGallons, halfGallons,
     caseProfit, sixthProfit, halfProfit,
