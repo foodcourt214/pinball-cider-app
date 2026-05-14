@@ -173,6 +173,7 @@ export default function App() {
   const [costs, setCosts] = useState(INITIAL_COSTS)
   const [pricing, setPricing] = useState(INITIAL_PRICING)
   const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15 })
+  const [channelMix, setChannelMix] = useState({ casePtwPct: 70, sixthPtwPct: 60, halfPtwPct: 50 })
   const [activeTab, setActiveTab] = useState('recipe')
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
   const [loadMenuOpen, setLoadMenuOpen] = useState(false)
@@ -180,8 +181,27 @@ export default function App() {
 
   const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix), [recipe, costs, pricing, mix])
 
+  // Blended revenue/profit based on PTW/PTR channel split
+  const blended = useMemo(() => {
+    const blend = (count, cogsTotal, ptw, ptr, ptwPct) => {
+      const ptwCount = Math.round(count * (ptwPct / 100))
+      const ptrCount = count - ptwCount
+      const revenue = ptwCount * ptw + ptrCount * ptr
+      const profit = revenue - cogsTotal
+      const margin = revenue > 0 ? (profit / revenue * 100).toFixed(1) : 0
+      return { ptwCount, ptrCount, revenue, profit, margin }
+    }
+    const c = blend(calc.caseCount, calc.caseProfit.cogsTotal, pricing.casePTW, pricing.casePTR, channelMix.casePtwPct)
+    const s = blend(calc.sixthCount, calc.sixthProfit.cogsTotal, pricing.sixthPTW, pricing.sixthPTR, channelMix.sixthPtwPct)
+    const h = blend(calc.halfCount, calc.halfProfit.cogsTotal, pricing.halfPTW, pricing.halfPTR, channelMix.halfPtwPct)
+    const totalRevenue = c.revenue + s.revenue + h.revenue
+    const totalProfit = c.profit + s.profit + h.profit
+    const totalMargin = totalRevenue > 0 ? (totalProfit / totalRevenue * 100).toFixed(1) : 0
+    return { case: c, sixth: s, half: h, totalRevenue, totalProfit, totalMargin }
+  }, [calc, channelMix, pricing])
+
   const saveBatch = () => {
-    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix } }
+    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix } }
     setSavedBatches(updated)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
     setSaveFlash(true)
@@ -195,11 +215,13 @@ export default function App() {
     setCosts(b.costs)
     setPricing(b.pricing)
     setMix(b.mix)
+    if (b.channelMix) setChannelMix(b.channelMix)
     setLoadMenuOpen(false)
   }
 
   const deleteBatch = (name, e) => {
     e.stopPropagation()
+    e.preventDefault()
     const updated = { ...savedBatches }
     delete updated[name]
     setSavedBatches(updated)
@@ -242,15 +264,18 @@ export default function App() {
                   📂 Load {savedNames.length > 0 && <span className="ml-1 text-amber-400">({savedNames.length})</span>}
                 </button>
                 {loadMenuOpen && (
-                  <div className="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-48">
+                  <div className="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-52">
                     {savedNames.length === 0 ? (
                       <p className="text-slate-400 text-xs px-3 py-2">No saved batches yet</p>
                     ) : savedNames.map(name => (
-                      <div key={name} className="flex items-center justify-between hover:bg-slate-700 px-3 py-2 cursor-pointer group"
+                      <div key={name} className="flex items-center justify-between hover:bg-slate-700 px-3 py-2 cursor-pointer"
                         onClick={() => loadBatch(name)}>
-                        <span className="text-sm text-slate-200">{name}</span>
-                        <button onClick={(e) => deleteBatch(name, e)}
-                          className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 ml-2 text-lg leading-none">×</button>
+                        <span className="text-sm text-slate-200 truncate">{name}</span>
+                        <button
+                          onClick={e => deleteBatch(name, e)}
+                          className="ml-3 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:bg-red-500 hover:text-white text-sm font-bold transition-colors"
+                          title="Delete"
+                        >×</button>
                       </div>
                     ))}
                   </div>
@@ -265,15 +290,15 @@ export default function App() {
               <div className="text-slate-500 text-xs">COGS</div>
             </div>
             <div>
-              <div className="text-sm font-bold text-blue-400">${calc.totalRevenuePTW.toFixed(0)}</div>
+              <div className="text-sm font-bold text-blue-400">${blended.totalRevenue.toFixed(0)}</div>
               <div className="text-slate-500 text-xs">Revenue</div>
             </div>
             <div>
-              <div className="text-sm font-bold text-emerald-400">${calc.totalProfitPTW.toFixed(0)}</div>
+              <div className="text-sm font-bold text-emerald-400">${blended.totalProfit.toFixed(0)}</div>
               <div className="text-slate-500 text-xs">Profit</div>
             </div>
             <div>
-              <div className="text-sm font-bold text-emerald-400">{calc.grossMarginPct}%</div>
+              <div className="text-sm font-bold text-emerald-400">{blended.totalMargin}%</div>
               <div className="text-slate-500 text-xs">Margin</div>
             </div>
           </div>
@@ -312,7 +337,8 @@ export default function App() {
             <DistributionPricing pricing={pricing} setPricing={setPricing} calc={calc} />
           )}
           {activeTab === 'mix' && (
-            <MixSlider mix={mix} setMix={setMix} pricing={pricing} calc={calc} recipe={recipe} />
+            <MixSlider mix={mix} setMix={setMix} channelMix={channelMix} setChannelMix={setChannelMix}
+              pricing={pricing} calc={calc} recipe={recipe} blended={blended} />
           )}
         </div>
       </div>
