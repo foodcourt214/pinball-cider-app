@@ -26,10 +26,7 @@ export const INITIAL_RECIPE = {
 
 export const INITIAL_FINAL_RECIPE = {
   finalGallons: '',
-  items: [
-    { id: 1, name: 'Acai', amount: '', unit: 'lbs' },
-    { id: 2, name: 'Yuzu', amount: '', unit: 'lbs' },
-  ],
+  items: [],
 }
 
 // Costs structured to match canning invoices
