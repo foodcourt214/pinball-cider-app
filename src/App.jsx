@@ -210,12 +210,15 @@ export default function App() {
   }, [loadMenuOpen])
 
   const finalGallonsTotal = useMemo(() => {
-    const juice = parseFloat(finalRecipe.finalGallons) || 0
+    const ordGal = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0)
     const adjGal = (finalRecipe.items || [])
       .filter(i => i.unit === 'gal')
       .reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
-    return juice + adjGal
-  }, [finalRecipe])
+    const hasJuice = parseFloat(finalRecipe.finalGallons) > 0
+    const juiceBase = hasJuice ? parseFloat(finalRecipe.finalGallons) : ordGal
+    if (!hasJuice && adjGal === 0) return 0  // nothing entered — fall back to ordered in calcBatch
+    return juiceBase + adjGal
+  }, [finalRecipe, recipe])
 
   const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, finalGallonsTotal), [recipe, costs, pricing, mix, finalGallonsTotal])
 

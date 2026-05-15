@@ -17,12 +17,13 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
   const removeItem = id => setFinalRecipe(r => ({ ...r, items: r.items.filter(i => i.id !== id) }))
 
   const orderedGallons = calc.gallons
-  const juiceGal = parseFloat(finalRecipe.finalGallons) || 0
+  const enteredJuice = parseFloat(finalRecipe.finalGallons) > 0 ? parseFloat(finalRecipe.finalGallons) : 0
+  const juiceGal = enteredJuice > 0 ? enteredJuice : orderedGallons
   const adjunctGal = (finalRecipe.items || [])
     .filter(i => i.unit === 'gal')
     .reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
   const totalFinalGal = juiceGal + adjunctGal
-  const lossGal = juiceGal > 0 ? orderedGallons - juiceGal : null
+  const lossGal = enteredJuice > 0 ? orderedGallons - enteredJuice : null
   const lossPct = lossGal !== null && orderedGallons > 0
     ? ((lossGal / orderedGallons) * 100).toFixed(1)
     : null
