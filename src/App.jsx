@@ -187,7 +187,10 @@ export default function App() {
   const [costs, setCosts] = useState(INITIAL_COSTS)
   const [pricing, setPricing] = useState(INITIAL_PRICING)
   const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15 })
-  const [finalRecipe, setFinalRecipe] = useState(INITIAL_FINAL_RECIPE)
+  const [finalRecipe, setFinalRecipe] = useState(() => ({
+    finalGallons: '',
+    items: INITIAL_RECIPE.adjuncts.map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
+  }))
   const [channelMix, setChannelMix] = useState({ casePtwPct: 70, sixthPtwPct: 60, halfPtwPct: 50 })
   const [activeTab, setActiveTab] = useState('recipe')
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
@@ -248,7 +251,10 @@ export default function App() {
     setCosts(b.costs)
     setPricing(b.pricing)
     setMix({ casePct: 60, sixthPct: 25, halfPct: 15, ...(b.mix || {}) })
-    setFinalRecipe(b.finalRecipe || { ...INITIAL_FINAL_RECIPE, finalGallons: b.mix?.finalGallons || '' })
+    setFinalRecipe(b.finalRecipe || {
+      finalGallons: b.mix?.finalGallons || '',
+      items: (b.recipe.adjuncts || []).map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
+    })
     if (b.channelMix) setChannelMix(b.channelMix)
     setLoadMenuOpen(false)
   }
