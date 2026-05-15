@@ -117,23 +117,14 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
             <h2 className="text-base font-semibold text-amber-400">Format Mix</h2>
             <p className="text-xs text-slate-500 mt-0.5">What % of the batch goes to each package format</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-right">
+          <div className="flex items-center gap-4 text-right">
+            <div>
               <div className="text-xs text-slate-500">Ordered</div>
-              <div className="text-xs text-slate-400">{Math.round(calc.gallons || 0)} gal</div>
+              <div className="text-sm font-medium text-slate-300">{Math.round(calc.gallons || 0)} gal</div>
             </div>
-            <div className="flex flex-col items-end gap-0.5">
-              <label className="text-xs text-slate-500">Final gallons (after loss)</label>
-              <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
-                <input
-                  type="number" min="0" step="1"
-                  value={mix.finalGallons}
-                  onChange={e => setMix(m => ({ ...m, finalGallons: e.target.value }))}
-                  placeholder={Math.round(calc.gallons || 0)}
-                  className="bg-transparent px-2 py-1 text-sm text-slate-100 outline-none w-24 text-right"
-                />
-                <span className="pr-2 text-slate-400 text-xs">gal</span>
-              </div>
+            <div>
+              <div className="text-xs text-slate-500">Final</div>
+              <div className="text-sm font-medium text-amber-400">{Math.round(calc.packagingGallons || 0)} gal</div>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import './App.css'
 import BatchRecipe from './components/BatchRecipe'
+import FinalRecipe from './components/FinalRecipe'
 import CostTracking from './components/CostTracking'
 import DistributionPricing from './components/DistributionPricing'
 import MixSlider from './components/MixSlider'
@@ -20,6 +21,15 @@ export const INITIAL_RECIPE = {
   adjuncts: [
     { id: 1, name: 'Acai', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' },
     { id: 2, name: 'Yuzu', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' },
+  ],
+}
+
+export const INITIAL_FINAL_RECIPE = {
+  finalGallons: '',
+  items: [
+    { id: 1, name: 'Juice', amount: '', unit: 'gal' },
+    { id: 2, name: 'Acai', amount: '', unit: 'lbs' },
+    { id: 3, name: 'Yuzu', amount: '', unit: 'lbs' },
   ],
 }
 
@@ -72,7 +82,7 @@ function loadSavedBatches() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') } catch { return {} }
 }
 
-export function calcBatch(recipe, costs, pricing, mix) {
+export function calcBatch(recipe, costs, pricing, mix, finalGallons = '') {
   const gallons = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0)
   const og = parseFloat(recipe.og) || 1.0
   const sg = parseFloat(recipe.sg) || 1.0
@@ -92,7 +102,7 @@ export function calcBatch(recipe, costs, pricing, mix) {
   )
   const totalShipping = appleShipping + adjunctShipping
 
-  const packagingGallons = parseFloat(mix.finalGallons) > 0 ? parseFloat(mix.finalGallons) : gallons
+  const packagingGallons = parseFloat(finalGallons) > 0 ? parseFloat(finalGallons) : gallons
   const caseGallons = packagingGallons * (mix.casePct / 100)
   const sixthGallons = packagingGallons * (mix.sixthPct / 100)
   const halfGallons = packagingGallons * (mix.halfPct / 100)
@@ -180,7 +190,8 @@ export default function App() {
   const [recipe, setRecipe] = useState(INITIAL_RECIPE)
   const [costs, setCosts] = useState(INITIAL_COSTS)
   const [pricing, setPricing] = useState(INITIAL_PRICING)
-  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15, finalGallons: '' })
+  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15 })
+  const [finalRecipe, setFinalRecipe] = useState(INITIAL_FINAL_RECIPE)
   const [channelMix, setChannelMix] = useState({ casePtwPct: 70, sixthPtwPct: 60, halfPtwPct: 50 })
   const [activeTab, setActiveTab] = useState('recipe')
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
@@ -199,7 +210,7 @@ export default function App() {
     return () => document.removeEventListener('mousedown', handler)
   }, [loadMenuOpen])
 
-  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix), [recipe, costs, pricing, mix])
+  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, finalRecipe.finalGallons), [recipe, costs, pricing, mix, finalRecipe.finalGallons])
 
   // Blended revenue/profit based on PTW/PTR channel split
   const blended = useMemo(() => {
@@ -221,7 +232,7 @@ export default function App() {
   }, [calc, channelMix, pricing])
 
   const saveBatch = () => {
-    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix } }
+    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix, finalRecipe } }
     setSavedBatches(updated)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
     setSaveFlash(true)
@@ -240,7 +251,8 @@ export default function App() {
     setRecipe(recipe)
     setCosts(b.costs)
     setPricing(b.pricing)
-    setMix({ finalGallons: '', ...(b.mix || {}) })
+    setMix({ casePct: 60, sixthPct: 25, halfPct: 15, ...(b.mix || {}) })
+    setFinalRecipe(b.finalRecipe || { ...INITIAL_FINAL_RECIPE, finalGallons: b.mix?.finalGallons || '' })
     if (b.channelMix) setChannelMix(b.channelMix)
     setLoadMenuOpen(false)
   }
@@ -255,7 +267,8 @@ export default function App() {
   }
 
   const tabs = [
-    { id: 'recipe', label: '🍎 Batch Recipe' },
+    { id: 'recipe', label: '🍎 Batch' },
+    { id: 'final', label: '📋 Final Recipe' },
     { id: 'costs', label: '💰 Cost Tracking' },
     { id: 'pricing', label: '🏷️ Pricing' },
     { id: 'mix', label: '📊 Mix & Profit' },
@@ -392,6 +405,9 @@ export default function App() {
         <div className="py-6">
           {activeTab === 'recipe' && (
             <BatchRecipe recipe={recipe} setRecipe={setRecipe} calc={calc} />
+          )}
+          {activeTab === 'final' && (
+            <FinalRecipe recipe={recipe} finalRecipe={finalRecipe} setFinalRecipe={setFinalRecipe} calc={calc} />
           )}
           {activeTab === 'costs' && (
             <CostTracking costs={costs} setCosts={setCosts} calc={calc} />
