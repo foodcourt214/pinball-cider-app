@@ -209,7 +209,15 @@ export default function App() {
     return () => document.removeEventListener('mousedown', handler)
   }, [loadMenuOpen])
 
-  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, finalRecipe.finalGallons), [recipe, costs, pricing, mix, finalRecipe.finalGallons])
+  const finalGallonsTotal = useMemo(() => {
+    const juice = parseFloat(finalRecipe.finalGallons) || 0
+    const adjGal = (finalRecipe.items || [])
+      .filter(i => i.unit === 'gal')
+      .reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
+    return juice + adjGal
+  }, [finalRecipe])
+
+  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, finalGallonsTotal), [recipe, costs, pricing, mix, finalGallonsTotal])
 
   // Blended revenue/profit based on PTW/PTR channel split
   const blended = useMemo(() => {

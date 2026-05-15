@@ -17,8 +17,12 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
   const removeItem = id => setFinalRecipe(r => ({ ...r, items: r.items.filter(i => i.id !== id) }))
 
   const orderedGallons = calc.gallons
-  const finalGal = parseFloat(finalRecipe.finalGallons)
-  const lossGal = finalGal > 0 ? orderedGallons - finalGal : null
+  const juiceGal = parseFloat(finalRecipe.finalGallons) || 0
+  const adjunctGal = (finalRecipe.items || [])
+    .filter(i => i.unit === 'gal')
+    .reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
+  const totalFinalGal = juiceGal + adjunctGal
+  const lossGal = juiceGal > 0 ? orderedGallons - juiceGal : null
   const lossPct = lossGal !== null && orderedGallons > 0
     ? ((lossGal / orderedGallons) * 100).toFixed(1)
     : null
@@ -28,7 +32,7 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
       {/* Final Gallons */}
       <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
         <h2 className="text-base font-semibold text-amber-400 mb-4">Final Batch Gallons</h2>
-        <div className="flex items-center gap-6 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="bg-slate-700/50 rounded p-4 text-center min-w-24">
             <div className="text-2xl font-bold text-slate-300">{orderedGallons.toFixed(0)}</div>
             <div className="text-xs text-slate-500 mt-1">Ordered gal</div>
@@ -52,11 +56,23 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
               </p>
             )}
           </div>
-          {finalGal > 0 && (
-            <div className="bg-slate-700/50 rounded p-4 text-center min-w-24">
-              <div className="text-2xl font-bold text-amber-400">{finalGal.toFixed(0)}</div>
-              <div className="text-xs text-slate-500 mt-1">Final gal</div>
-            </div>
+          {adjunctGal > 0 && (
+            <>
+              <div className="text-slate-500 text-2xl font-light">+</div>
+              <div className="bg-slate-700/50 rounded p-4 text-center min-w-24">
+                <div className="text-2xl font-bold text-blue-400">{adjunctGal.toFixed(1)}</div>
+                <div className="text-xs text-slate-500 mt-1">Adjuncts (gal)</div>
+              </div>
+            </>
+          )}
+          {totalFinalGal > 0 && (
+            <>
+              <div className="text-slate-500 text-2xl font-light">=</div>
+              <div className="bg-slate-700/50 rounded p-4 text-center min-w-24">
+                <div className="text-2xl font-bold text-amber-400">{totalFinalGal.toFixed(0)}</div>
+                <div className="text-xs text-slate-500 mt-1">Final gal</div>
+              </div>
+            </>
           )}
         </div>
       </div>
