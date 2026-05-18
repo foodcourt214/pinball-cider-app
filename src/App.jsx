@@ -48,8 +48,9 @@ export const INITIAL_COSTS = {
   // Contract producer fee (per canned gallon only)
   contractFeePerGal: 3.23,
 
-  // Velcorin (per canned gallon only — not applied to kegs)
+  // Velcorin (per canned gallon only by default; check velcorinKegs to include kegs)
   velcorinPerGal: 1.05,
+  velcorinKegs: false,
 
   // Keg costs (all-in: fill + cleaning + storage per keg)
   halfBblCost: 60.00,
@@ -116,8 +117,9 @@ export function calcBatch(recipe, costs, pricing, mix, finalGallons = '') {
   // Contract producer fee — per canned gallon only
   const contractFeeTotal = costs.contractFeePerGal * caseGallons
 
-  // Velcorin — per canned gallon only
-  const velcorinTotal = costs.velcorinPerGal * caseGallons
+  // Velcorin — canned gallons always; keg gallons optionally
+  const velcorinGallons = caseGallons + (costs.velcorinKegs ? sixthGallons + halfGallons : 0)
+  const velcorinTotal = costs.velcorinPerGal * velcorinGallons
 
   // Labels — auto-calculated from total can count ($X per 1000 cans)
   const labelCostTotal = totalCanCount * (costs.labelCostPerM / 1000)
@@ -137,8 +139,9 @@ export function calcBatch(recipe, costs, pricing, mix, finalGallons = '') {
 
   // COGS per unit — kegs only get batch-fixed allocation, no canning costs
   const cogsPerCase = (batchFixedPerGal + canningOnlyPerGal) * CASE_GAL + canningCostPerCase
-  const cogsPerSixth = batchFixedPerGal * SIXTH_GAL + costs.sixthBblCost
-  const cogsPerHalf = batchFixedPerGal * HALF_GAL + costs.halfBblCost
+  const kegVelcorinPerGal = costs.velcorinKegs ? costs.velcorinPerGal : 0
+  const cogsPerSixth = batchFixedPerGal * SIXTH_GAL + costs.sixthBblCost + kegVelcorinPerGal * SIXTH_GAL
+  const cogsPerHalf = batchFixedPerGal * HALF_GAL + costs.halfBblCost + kegVelcorinPerGal * HALF_GAL
 
   const directCaseCost = caseCount * canningCostPerCase
   const directKegCost = sixthCount * costs.sixthBblCost + halfCount * costs.halfBblCost
@@ -165,7 +168,7 @@ export function calcBatch(recipe, costs, pricing, mix, finalGallons = '') {
 
   return {
     abv, appleCost, appleShipping, adjunctCost, adjunctShipping, totalShipping,
-    canningLaborCost, contractFeeTotal, velcorinTotal,
+    canningLaborCost, contractFeeTotal, velcorinTotal, velcorinGallons,
     labelCostTotal, labelCostPerCase, totalCanCount,
     batchLumpSums, totalBatchFixed, batchFixedPerGal,
     canningOnlyPerGal, canningCostPerCase,

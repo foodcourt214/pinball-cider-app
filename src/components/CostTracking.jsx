@@ -53,6 +53,7 @@ function CogsRow({ label, value, note, bold }) {
 
 export default function CostTracking({ costs, setCosts, calc }) {
   const set = key => val => setCosts(c => ({ ...c, [key]: val }))
+  const toggle = key => () => setCosts(c => ({ ...c, [key]: !c[key] }))
 
   const canningPkgPerCase = costs.fillServicePerCase + costs.cansPerCase +
     costs.endsPerCase + costs.pakTechPerCase + costs.traysPerCase
@@ -140,14 +141,36 @@ export default function CostTracking({ costs, setCosts, calc }) {
         </Section>
 
         {/* Services — Velcorin */}
-        <Section title="⚗️ Velcorin / Services" badge="Per canned gal"
-          subtitle="Applied to canned gallons only — kegs are not dosed">
+        <Section title="⚗️ Velcorin / Services"
+          badge={costs.velcorinKegs ? 'Per dosed gal' : 'Per canned gal'}
+          subtitle={costs.velcorinKegs
+            ? 'Applied to canned gallons and kegs'
+            : 'Applied to canned gallons only — kegs are not dosed'}>
           <CostInput label="Velcorin dosing" value={costs.velcorinPerGal} onChange={set('velcorinPerGal')}
             suffix="/gal" note="Microbial stabilization for canning" />
+          <label className="flex items-center gap-2 cursor-pointer select-none pt-0.5">
+            <input
+              type="checkbox"
+              checked={!!costs.velcorinKegs}
+              onChange={toggle('velcorinKegs')}
+              className="w-4 h-4 accent-amber-400 cursor-pointer"
+            />
+            <span className="text-sm text-slate-300">Keg Velcorin Dosing</span>
+          </label>
           <div className="mt-2 bg-slate-700/40 rounded p-3 space-y-1 text-xs">
             <div className="flex justify-between text-slate-400">
               <span>Canned gallons</span>
               <span className="text-slate-200">{calc.caseGallons.toFixed(1)} gal</span>
+            </div>
+            {costs.velcorinKegs && (
+              <div className="flex justify-between text-slate-400">
+                <span>Keg gallons</span>
+                <span className="text-slate-200">{(calc.sixthGallons + calc.halfGallons).toFixed(1)} gal</span>
+              </div>
+            )}
+            <div className="flex justify-between text-slate-400">
+              <span>Total dosed gallons</span>
+              <span className="text-slate-200">{calc.velcorinGallons.toFixed(1)} gal</span>
             </div>
             <div className="flex justify-between font-medium border-t border-slate-600 pt-1 mt-1">
               <span className="text-slate-300">Total Velcorin cost</span>
@@ -198,7 +221,7 @@ export default function CostTracking({ costs, setCosts, calc }) {
             <p className="text-xs text-slate-500 mt-3 mb-2 font-medium uppercase tracking-wide">Canning-only costs</p>
             <CogsRow label="Canning Labor" value={calc.canningLaborCost} note={`${calc.caseGallons.toFixed(0)} canned gal`} />
             <CogsRow label={`Contract Producer Fee ($${costs.contractFeePerGal}/gal)`} value={calc.contractFeeTotal} note={`${calc.caseGallons.toFixed(0)} canned gal`} />
-            <CogsRow label={`Velcorin ($${costs.velcorinPerGal}/gal)`} value={calc.velcorinTotal} note={`${calc.caseGallons.toFixed(0)} canned gal`} />
+            <CogsRow label={`Velcorin ($${costs.velcorinPerGal}/gal)`} value={calc.velcorinTotal} note={`${calc.velcorinGallons.toFixed(0)} dosed gal`} />
             <CogsRow label={`Case packaging + labels (${calc.caseCount} cs × $${calc.canningCostPerCase.toFixed(2)})`} value={calc.directCaseCost} />
             <p className="text-xs text-slate-500 mt-3 mb-2 font-medium uppercase tracking-wide">Keg costs</p>
             <CogsRow label={`Kegs (${calc.sixthCount} × 1/6 + ${calc.halfCount} × 1/2)`} value={calc.directKegCost} />
