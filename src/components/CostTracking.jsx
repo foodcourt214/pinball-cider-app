@@ -142,12 +142,12 @@ export default function CostTracking({ costs, setCosts, calc }) {
 
         {/* Services — Velcorin */}
         <Section title="⚗️ Velcorin / Services"
-          badge={costs.velcorinKegs ? 'Per dosed gal' : 'Per canned gal'}
+          badge={costs.velcorinKegs ? 'All gallons' : 'Disabled'}
           subtitle={costs.velcorinKegs
-            ? 'Applied to canned gallons and kegs'
-            : 'Applied to canned gallons only — kegs are not dosed'}>
+            ? 'Applied to all gallons — cans and kegs'
+            : 'Disabled — check to apply dosing to all formats'}>
           <CostInput label="Velcorin dosing" value={costs.velcorinPerGal} onChange={set('velcorinPerGal')}
-            suffix="/gal" note="Microbial stabilization for canning" />
+            suffix="/gal" note="Microbial stabilization" />
           <label className="flex items-center gap-2 cursor-pointer select-none pt-0.5">
             <input
               type="checkbox"
@@ -155,28 +155,32 @@ export default function CostTracking({ costs, setCosts, calc }) {
               onChange={toggle('velcorinKegs')}
               className="w-4 h-4 accent-amber-400 cursor-pointer"
             />
-            <span className="text-sm text-slate-300">Keg Velcorin Dosing</span>
+            <span className="text-sm text-slate-300">Velcorin Dosing</span>
           </label>
-          <div className="mt-2 bg-slate-700/40 rounded p-3 space-y-1 text-xs">
-            <div className="flex justify-between text-slate-400">
-              <span>Canned gallons</span>
-              <span className="text-slate-200">{calc.caseGallons.toFixed(1)} gal</span>
-            </div>
-            {costs.velcorinKegs && (
+          {costs.velcorinKegs && (
+            <div className="mt-2 bg-slate-700/40 rounded p-3 space-y-1 text-xs">
               <div className="flex justify-between text-slate-400">
-                <span>Keg gallons</span>
-                <span className="text-slate-200">{(calc.sixthGallons + calc.halfGallons).toFixed(1)} gal</span>
+                <span>Canned gallons</span>
+                <span className="text-slate-200">{calc.caseGallons.toFixed(1)} gal</span>
               </div>
-            )}
-            <div className="flex justify-between text-slate-400">
-              <span>Total dosed gallons</span>
-              <span className="text-slate-200">{calc.velcorinGallons.toFixed(1)} gal</span>
+              <div className="flex justify-between text-slate-400">
+                <span>1/6 BBL keg gallons</span>
+                <span className="text-slate-200">{calc.sixthGallons.toFixed(1)} gal</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>1/2 BBL keg gallons</span>
+                <span className="text-slate-200">{calc.halfGallons.toFixed(1)} gal</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>Total dosed gallons</span>
+                <span className="text-slate-200">{calc.velcorinGallons.toFixed(1)} gal</span>
+              </div>
+              <div className="flex justify-between font-medium border-t border-slate-600 pt-1 mt-1">
+                <span className="text-slate-300">Total Velcorin cost</span>
+                <span className="text-amber-400">${calc.velcorinTotal.toFixed(2)}</span>
+              </div>
             </div>
-            <div className="flex justify-between font-medium border-t border-slate-600 pt-1 mt-1">
-              <span className="text-slate-300">Total Velcorin cost</span>
-              <span className="text-amber-400">${calc.velcorinTotal.toFixed(2)}</span>
-            </div>
-          </div>
+          )}
         </Section>
 
         {/* Keg Costs */}

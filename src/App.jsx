@@ -117,8 +117,8 @@ export function calcBatch(recipe, costs, pricing, mix, finalGallons = '') {
   // Contract producer fee — per canned gallon only
   const contractFeeTotal = costs.contractFeePerGal * caseGallons
 
-  // Velcorin — canned gallons always; keg gallons optionally
-  const velcorinGallons = caseGallons + (costs.velcorinKegs ? sixthGallons + halfGallons : 0)
+  // Velcorin — applies to all gallons when enabled, nothing when disabled
+  const velcorinGallons = costs.velcorinKegs ? (caseGallons + sixthGallons + halfGallons) : 0
   const velcorinTotal = costs.velcorinPerGal * velcorinGallons
 
   // Labels — auto-calculated from total can count ($X per 1000 cans)
