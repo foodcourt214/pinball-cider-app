@@ -88,7 +88,7 @@ function FormatCard({ title, icon, units, gallons, blendData, cogsTotal, accentC
   )
 }
 
-export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended }) {
+export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended, actuals, setActuals }) {
   // Format mix: redistribute remaining proportionally
   const handleMixChange = (key, newVal) => {
     const otherKeys = ['casePct', 'sixthPct', 'halfPct'].filter(k => k !== key)
@@ -107,6 +107,26 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
   }
 
   const setChannel = key => val => setChannelMix(c => ({ ...c, [key]: val }))
+
+  // Actuals calculations
+  const actualCases = parseInt(actuals.cases) || 0
+  const actualSixth = parseInt(actuals.sixthBbl) || 0
+  const actualHalf = parseInt(actuals.halfBbl) || 0
+  const hasActuals = actualCases > 0 || actualSixth > 0 || actualHalf > 0
+
+  const actualCOGS = actualCases * calc.cogsPerCase + actualSixth * calc.cogsPerSixth + actualHalf * calc.cogsPerHalf
+
+  const blendRevenue = (count, ptw, ptr, ptwPct) => {
+    const ptwCount = Math.round(count * (ptwPct / 100))
+    return ptwCount * ptw + (count - ptwCount) * ptr
+  }
+  const actualRevenue =
+    blendRevenue(actualCases, pricing.casePTW, pricing.casePTR, channelMix.casePtwPct) +
+    blendRevenue(actualSixth, pricing.sixthPTW, pricing.sixthPTR, channelMix.sixthPtwPct) +
+    blendRevenue(actualHalf, pricing.halfPTW, pricing.halfPTR, channelMix.halfPtwPct)
+  const actualProfit = actualRevenue - actualCOGS
+  const actualMargin = actualRevenue > 0 ? (actualProfit / actualRevenue * 100).toFixed(1) : '0.0'
+  const marginColor = parseFloat(actualMargin) >= 30 ? 'text-emerald-400' : parseFloat(actualMargin) >= 15 ? 'text-yellow-400' : 'text-red-400'
 
   return (
     <div className="space-y-6">
@@ -223,6 +243,65 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Actuals */}
+      <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-amber-400">Actuals</h2>
+          <p className="text-xs text-slate-500 mt-0.5">Enter real units produced to see actual revenue, COGS, and profit</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          {[
+            { label: 'Cases', icon: '🥤', key: 'cases', placeholder: calc.caseCount },
+            { label: '1/6 BBL Kegs', icon: '🛢️', key: 'sixthBbl', placeholder: calc.sixthCount },
+            { label: '1/2 BBL Kegs', icon: '🛢️', key: 'halfBbl', placeholder: calc.halfCount },
+          ].map(({ label, icon, key, placeholder }) => (
+            <div key={key} className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+              <div className="text-sm font-medium text-slate-300 mb-2">{icon} {label}</div>
+              <input
+                type="number" min="0" step="1"
+                value={actuals[key]}
+                placeholder={placeholder}
+                onChange={e => setActuals(a => ({ ...a, [key]: e.target.value }))}
+                className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-slate-100 text-sm outline-none focus:border-amber-400 text-right"
+              />
+              <div className="text-xs text-slate-500 mt-1 text-right">projected: {placeholder}</div>
+            </div>
+          ))}
+        </div>
+
+        {hasActuals ? (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+              {[
+                { label: 'Actual Revenue', value: `$${actualRevenue.toFixed(0)}`, color: 'text-blue-400' },
+                { label: 'Actual COGS', value: `$${actualCOGS.toFixed(0)}`, color: 'text-red-400' },
+                { label: 'Actual Profit', value: `$${actualProfit.toFixed(0)}`, color: actualProfit >= 0 ? 'text-emerald-400' : 'text-red-400' },
+                { label: 'Actual Margin', value: `${actualMargin}%`, color: marginColor },
+              ].map(s => (
+                <div key={s.label} className="bg-slate-700/50 rounded p-4 text-center">
+                  <div className={`text-2xl font-bold ${s.color}`}>{s.value}</div>
+                  <div className="text-xs text-slate-400 mt-1">{s.label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="pt-4 border-t border-slate-700 grid grid-cols-3 gap-4 text-center text-sm">
+              {[
+                { label: 'Actual Cases', value: actualCases, color: 'text-amber-400' },
+                { label: 'Actual 1/6 BBL', value: actualSixth, color: 'text-blue-400' },
+                { label: 'Actual 1/2 BBL', value: actualHalf, color: 'text-violet-400' },
+              ].map(s => (
+                <div key={s.label}>
+                  <span className={`font-semibold ${s.color}`}>{s.value}</span>
+                  <span className="text-slate-500 ml-1 text-xs">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center text-slate-500 text-sm py-4">Enter actual units above to see results</div>
+        )}
       </div>
     </div>
   )

@@ -195,6 +195,7 @@ export default function App() {
     items: INITIAL_RECIPE.adjuncts.map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
   }))
   const [channelMix, setChannelMix] = useState({ casePtwPct: 70, sixthPtwPct: 60, halfPtwPct: 50 })
+  const [actuals, setActuals] = useState({ cases: '', sixthBbl: '', halfBbl: '' })
   const [activeTab, setActiveTab] = useState('recipe')
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
   const [loadMenuOpen, setLoadMenuOpen] = useState(false)
@@ -245,7 +246,7 @@ export default function App() {
   }, [calc, channelMix, pricing])
 
   const saveBatch = () => {
-    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix, finalRecipe } }
+    const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix, finalRecipe, actuals } }
     setSavedBatches(updated)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
     setSaveFlash(true)
@@ -270,6 +271,7 @@ export default function App() {
       items: (b.recipe.adjuncts || []).map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
     })
     if (b.channelMix) setChannelMix(b.channelMix)
+    if (b.actuals) setActuals(b.actuals)
     setLoadMenuOpen(false)
   }
 
@@ -433,7 +435,8 @@ export default function App() {
           )}
           {activeTab === 'mix' && (
             <MixSlider mix={mix} setMix={setMix} channelMix={channelMix} setChannelMix={setChannelMix}
-              pricing={pricing} calc={calc} recipe={recipe} blended={blended} />
+              pricing={pricing} calc={calc} recipe={recipe} blended={blended}
+              actuals={actuals} setActuals={setActuals} />
           )}
         </div>
       </div>
