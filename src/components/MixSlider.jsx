@@ -88,7 +88,7 @@ function FormatCard({ title, icon, units, gallons, blendData, cogsTotal, accentC
   )
 }
 
-export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended, actuals, setActuals }) {
+export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended, actuals, setActuals, costs }) {
   // Format mix: redistribute remaining proportionally
   const handleMixChange = (key, newVal) => {
     const otherKeys = ['casePct', 'sixthPct', 'halfPct'].filter(k => k !== key)
@@ -114,7 +114,28 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
   const actualHalf = parseInt(actuals.halfBbl) || 0
   const hasActuals = actualCases > 0 || actualSixth > 0 || actualHalf > 0
 
-  const actualCOGS = calc.totalCOGS
+  // Fixed costs — don't change with actual unit counts
+  const actualFixedCOGS =
+    calc.appleCost + calc.appleShipping +
+    calc.adjunctCost + calc.adjunctShipping +
+    calc.batchLumpSums +
+    calc.canningLaborCost +
+    calc.labelCostTotal
+
+  // Variable costs — recalculate based on actual units
+  const actualCannedGal = actualCases * calc.CASE_GAL
+  const actualVelcorinGal = costs.velcorinKegs
+    ? actualCannedGal + actualSixth * calc.SIXTH_GAL + actualHalf * calc.HALF_GAL
+    : actualCannedGal
+  const pkgPerCaseNoLabels = calc.canningCostPerCase - calc.labelCostPerCase
+  const actualVariableCOGS =
+    actualCases * pkgPerCaseNoLabels +
+    actualCannedGal * costs.contractFeePerGal +
+    actualVelcorinGal * costs.velcorinPerGal +
+    actualSixth * costs.sixthBblCost +
+    actualHalf * costs.halfBblCost
+
+  const actualCOGS = actualFixedCOGS + actualVariableCOGS
 
   const blendRevenue = (count, ptw, ptr, ptwPct) => {
     const ptwCount = Math.round(count * (ptwPct / 100))
@@ -215,7 +236,7 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
 
       {/* Totals */}
       <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
-        <h2 className="text-base font-semibold text-amber-400 mb-4">Batch Profit Summary (Blended)</h2>
+        <h2 className="text-base font-semibold text-amber-400 mb-4">Ideal Batch Profit Summary</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           {[
             { label: 'Blended Revenue', value: `$${blended.totalRevenue.toFixed(0)}`, color: 'text-blue-400' },
@@ -248,7 +269,7 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
       {/* Actuals */}
       <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
         <div className="mb-4">
-          <h2 className="text-base font-semibold text-amber-400">Actuals</h2>
+          <h2 className="text-base font-semibold text-amber-400">Actual Profit Summary</h2>
           <p className="text-xs text-slate-500 mt-0.5">Enter real units produced to see actual revenue, COGS, and profit</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">

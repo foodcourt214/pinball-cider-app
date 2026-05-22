@@ -436,7 +436,7 @@ export default function App() {
           {activeTab === 'mix' && (
             <MixSlider mix={mix} setMix={setMix} channelMix={channelMix} setChannelMix={setChannelMix}
               pricing={pricing} calc={calc} recipe={recipe} blended={blended}
-              actuals={actuals} setActuals={setActuals} />
+              actuals={actuals} setActuals={setActuals} costs={costs} />
           )}
         </div>
       </div>
