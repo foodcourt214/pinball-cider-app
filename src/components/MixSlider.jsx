@@ -114,7 +114,7 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
   const actualHalf = parseInt(actuals.halfBbl) || 0
   const hasActuals = actualCases > 0 || actualSixth > 0 || actualHalf > 0
 
-  const actualCOGS = actualCases * calc.cogsPerCase + actualSixth * calc.cogsPerSixth + actualHalf * calc.cogsPerHalf
+  const actualCOGS = calc.totalCOGS
 
   const blendRevenue = (count, ptw, ptr, ptwPct) => {
     const ptwCount = Math.round(count * (ptwPct / 100))
