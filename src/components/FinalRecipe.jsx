@@ -6,6 +6,7 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
   const [nextId, setNextId] = useState(
     Math.max(0, ...(finalRecipe.items || []).map(i => i.id)) + 1
   )
+  const [dragging, setDragging] = useState(false)
   const fileInputRef = useRef(null)
 
   const setFinalGallons = val => setFinalRecipe(r => ({ ...r, finalGallons: val }))
@@ -17,13 +18,22 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
   }
   const removeItem = id => setFinalRecipe(r => ({ ...r, items: r.items.filter(i => i.id !== id) }))
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
+  const loadImageFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) return
     const reader = new FileReader()
     reader.onload = (ev) => setFinalRecipe(r => ({ ...r, screenshot: ev.target.result }))
     reader.readAsDataURL(file)
+  }
+
+  const handleImageUpload = (e) => {
+    loadImageFile(e.target.files[0])
     e.target.value = ''
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    setDragging(false)
+    loadImageFile(e.dataTransfer.files[0])
   }
 
   const orderedGallons = calc.gallons
@@ -148,11 +158,14 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
           <h2 className="text-base font-semibold text-amber-400 mb-1">Recipe Reference</h2>
           <p className="text-xs text-slate-500 mb-3">Upload a screenshot from your calculator app</p>
           {finalRecipe.screenshot ? (
-            <div className="space-y-2">
+            <div className="space-y-2"
+              onDragOver={e => { e.preventDefault(); setDragging(true) }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}>
               <img
                 src={finalRecipe.screenshot}
                 alt="Recipe screenshot"
-                className="w-full rounded border border-slate-600 object-contain"
+                className={`w-full rounded border object-contain transition-colors ${dragging ? 'border-amber-400 opacity-50' : 'border-slate-600'}`}
               />
               <div className="flex gap-2">
                 <button
@@ -168,13 +181,18 @@ export default function FinalRecipe({ recipe, finalRecipe, setFinalRecipe, calc 
               </div>
             </div>
           ) : (
-            <button
+            <div
               onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-slate-600 hover:border-amber-400 rounded-lg p-6 text-center transition-colors cursor-pointer">
+              onDragOver={e => { e.preventDefault(); setDragging(true) }}
+              onDragLeave={() => setDragging(false)}
+              onDrop={handleDrop}
+              className={`w-full border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+                dragging ? 'border-amber-400 bg-amber-400/10' : 'border-slate-600 hover:border-amber-400'
+              }`}>
               <div className="text-2xl mb-2">📷</div>
-              <div className="text-xs text-slate-400">Click to upload screenshot</div>
+              <div className="text-xs text-slate-400">{dragging ? 'Drop to upload' : 'Drag & drop or click to upload'}</div>
               <div className="text-xs text-slate-600 mt-1">PNG, JPG, WEBP</div>
-            </button>
+            </div>
           )}
           <input
             ref={fileInputRef}
