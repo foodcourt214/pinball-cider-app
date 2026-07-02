@@ -17,11 +17,14 @@ export default function About() {
   return (
     <>
       <section className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
-        <h1 className="max-w-4xl font-display text-5xl leading-[1.05] font-black sm:text-6xl">
-          Big agency expertise. <span className="text-tomato italic">None of the bloat.</span>
+        <p className="font-mono text-xs font-bold tracking-[0.4em] text-red uppercase">
+          Meet the vendor
+        </p>
+        <h1 className="mt-2 max-w-4xl font-display text-5xl leading-[0.95] tracking-wide uppercase sm:text-7xl">
+          Big agency expertise. <span className="text-red">None of the bloat.</span>
         </h1>
-        <div className="mt-8 grid gap-10 lg:grid-cols-[3fr_2fr]">
-          <div className="space-y-5 text-lg leading-relaxed text-ink-soft">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[3fr_2fr]">
+          <div className="space-y-5 text-lg leading-relaxed text-ink/75">
             <p>
               Food Court Creative combines equal parts creativity, strategy and production to
               develop delicious experiences that connect brands to humans.
@@ -32,41 +35,57 @@ export default function About() {
               big national players. We operate as an extension of your in-house team, bringing
               in specialized talent exactly when and where you need it.
             </p>
-            <p>
-              Based in Seattle’s Ballard neighborhood, working with brands everywhere.
-            </p>
+            <p>Based in Seattle’s Ballard neighborhood, working with brands everywhere.</p>
           </div>
-          <div className="rounded-2xl border border-ink/10 bg-white p-6">
-            <div className="flex items-center gap-4">
-              <span className="grid size-16 place-items-center rounded-full bg-teal font-display text-2xl font-black text-cream">
+
+          {/* Vendor badge */}
+          <div
+            className="hard-shadow h-fit border-2 border-ink bg-white p-6"
+            style={{ '--notch': 'var(--color-paper)' }}
+          >
+            <p className="font-mono text-[0.65rem] font-bold tracking-[0.3em] text-ink/50 uppercase">
+              Vendor of the month — every month
+            </p>
+            <div className="mt-4 flex items-center gap-4">
+              <span className="grid size-16 place-items-center border-2 border-ink bg-amber font-display text-2xl">
                 AF
               </span>
               <div>
-                <p className="font-display text-xl font-bold">Aaron Feiger</p>
-                <p className="text-sm text-ink-soft">Owner & Creative Director</p>
+                <p className="font-display text-2xl tracking-wide uppercase">Aaron Feiger</p>
+                <p className="font-mono text-xs text-ink/60 uppercase">
+                  Owner & Creative Director
+                </p>
               </div>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+            <p className="mt-4 text-sm leading-relaxed text-ink/70">
               Aaron leads every engagement, pairing big-brand creative direction with the speed
               and scrappiness challenger brands need.
             </p>
-            <a
-              href="mailto:aaron@foodcourtcreative.com"
-              className="mt-4 inline-block text-sm font-bold text-tomato hover:underline"
-            >
-              aaron@foodcourtcreative.com
-            </a>
+            <div className="ticket-tear mt-5 pt-4">
+              <a
+                href="mailto:aaron@foodcourtcreative.com"
+                className="font-mono text-xs font-bold tracking-widest text-red uppercase hover:underline"
+              >
+                aaron@foodcourtcreative.com
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-cream-dark py-14 sm:py-20">
+      {/* Services board */}
+      <section className="border-y-4 border-red bg-board py-14 text-paper sm:py-20">
         <div className="mx-auto max-w-6xl px-5">
-          <h2 className="font-display text-4xl font-black">What we do</h2>
-          <ul className="mt-8 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((s) => (
-              <li key={s} className="flex items-center gap-3 text-lg font-semibold">
-                <span className="text-tomato">✦</span>
+          <h2 className="neon-amber flicker font-display text-5xl tracking-wide uppercase">
+            What we do
+          </h2>
+          <ul className="mt-10 grid gap-x-10 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s, i) => (
+              <li
+                key={s}
+                className="flex items-baseline gap-3 font-mono text-sm font-bold tracking-wide uppercase"
+              >
+                <span className="text-amber">{String(i + 1).padStart(2, '0')}</span>
                 {s}
               </li>
             ))}
@@ -75,31 +94,29 @@ export default function About() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
-        <h2 className="font-display text-4xl font-black">Find us</h2>
-        <div className="mt-6 grid gap-6 text-lg sm:grid-cols-3">
-          <div>
-            <p className="text-xs font-bold tracking-[0.25em] text-ink-soft uppercase">Visit</p>
-            <p className="mt-2 font-semibold">
-              5325 Ballard Ave NW #214
-              <br />
-              Seattle, WA
-            </p>
-          </div>
-          <div>
-            <p className="text-xs font-bold tracking-[0.25em] text-ink-soft uppercase">Call</p>
-            <a href="tel:+14157068281" className="mt-2 block font-semibold hover:text-tomato">
-              415.706.8281
-            </a>
-          </div>
-          <div>
-            <p className="text-xs font-bold tracking-[0.25em] text-ink-soft uppercase">Email</p>
-            <a
-              href="mailto:contact@foodcourtcreative.com"
-              className="mt-2 block font-semibold hover:text-tomato"
-            >
-              contact@foodcourtcreative.com
-            </a>
-          </div>
+        <h2 className="font-display text-5xl tracking-wide uppercase">Find us</h2>
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {[
+            ['Visit', '5325 Ballard Ave NW #214\nSeattle, WA', null],
+            ['Call', '415.706.8281', 'tel:+14157068281'],
+            ['Email', 'contact@foodcourtcreative.com', 'mailto:contact@foodcourtcreative.com'],
+          ].map(([label, value, href]) => (
+            <div key={label} className="border-2 border-ink bg-white p-5">
+              <p className="font-mono text-[0.65rem] font-bold tracking-[0.3em] text-red uppercase">
+                {label}
+              </p>
+              {href ? (
+                <a
+                  href={href}
+                  className="mt-2 block font-mono text-sm font-bold break-all hover:text-red"
+                >
+                  {value}
+                </a>
+              ) : (
+                <p className="mt-2 font-mono text-sm font-bold whitespace-pre-line">{value}</p>
+              )}
+            </div>
+          ))}
         </div>
       </section>
     </>

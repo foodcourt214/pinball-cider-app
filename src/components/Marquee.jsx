@@ -18,20 +18,27 @@ const clients = [
 
 export default function Marquee() {
   const row = clients.map((c) => (
-    <span key={c} className="flex items-center gap-6 px-6">
-      <span className="font-display text-2xl font-bold whitespace-nowrap sm:text-3xl">{c}</span>
-      <span className="text-tomato">✦</span>
+    <span
+      key={c}
+      className="led-text flex items-center px-5 font-mono text-sm font-bold whitespace-nowrap uppercase sm:text-base"
+    >
+      {c}
+      <span className="ml-10 opacity-60">●</span>
     </span>
   ))
 
   return (
-    <div className="overflow-hidden border-y border-ink/10 bg-mustard py-4 text-ink">
-      <div className="animate-marquee flex w-max">
-        <div className="flex">{row}</div>
-        <div className="flex" aria-hidden>
-          {row}
+    <div>
+      <div className="checker h-4" />
+      <div className="overflow-hidden border-y-2 border-ink/80 bg-[#0d0905] py-3">
+        <div className="animate-marquee flex w-max">
+          <div className="flex">{row}</div>
+          <div className="flex" aria-hidden>
+            {row}
+          </div>
         </div>
       </div>
+      <div className="checker h-4" />
     </div>
   )
 }

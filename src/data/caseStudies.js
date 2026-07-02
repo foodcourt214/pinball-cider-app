@@ -353,4 +353,8 @@ export function getCaseStudy(slug) {
   return caseStudies.find((cs) => cs.slug === slug)
 }
 
+export function orderNumber(study) {
+  return String(caseStudies.indexOf(study) + 1).padStart(3, '0')
+}
+
 export default caseStudies

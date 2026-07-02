@@ -9,22 +9,27 @@ export default function Work() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
-      <h1 className="font-display text-5xl font-black sm:text-6xl">The work</h1>
-      <p className="mt-4 max-w-2xl text-lg text-ink-soft">
-        Brand builds, launches, packaging, content and campaigns for food & beverage brands that
-        refuse to blend in.
+      <p className="font-mono text-xs font-bold tracking-[0.4em] text-red uppercase">
+        Take a number
+      </p>
+      <h1 className="mt-2 font-display text-6xl tracking-wide uppercase sm:text-7xl">
+        The full menu
+      </h1>
+      <p className="mt-5 max-w-2xl font-mono text-sm leading-relaxed text-ink/70">
+        Brand builds, launches, packaging, content and campaigns for food & beverage brands
+        that refuse to blend in.
       </p>
 
-      <div className="mt-8 flex flex-wrap gap-2">
+      <div className="mt-8 flex flex-wrap gap-3">
         {categories.map((c) => (
           <button
             key={c}
             type="button"
             onClick={() => setFilter(c)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`border-2 border-ink px-4 py-2 font-mono text-xs font-bold tracking-[0.15em] uppercase transition-all ${
               filter === c
-                ? 'bg-ink text-cream'
-                : 'bg-cream-dark text-ink hover:bg-mustard'
+                ? 'hard-shadow-sm -translate-y-0.5 bg-red text-paper'
+                : 'bg-white hover:bg-amber'
             }`}
           >
             {c}
@@ -32,7 +37,7 @@ export default function Work() {
         ))}
       </div>
 
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((cs) => (
           <WorkCard key={cs.slug} study={cs} />
         ))}

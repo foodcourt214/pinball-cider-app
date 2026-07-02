@@ -1,7 +1,7 @@
 // Renders a case study's cover. Drop a real image at
 // src/assets/work/<slug>/cover.{jpg,jpeg,png,webp} and it is used
-// automatically; otherwise an art-directed placeholder in the brand's
-// colors is shown.
+// automatically; otherwise a flat, food-court-style ticket cover in the
+// brand's colors is shown.
 const covers = import.meta.glob('../assets/work/*/cover.{jpg,jpeg,png,webp}', {
   eager: true,
   query: '?url',
@@ -26,32 +26,43 @@ export default function Cover({ study, className = '' }) {
     )
   }
 
+  const wallpaper = Array(60).fill(study.emoji).join('  ')
+
   return (
     <div
       aria-hidden
       className={`relative flex h-full w-full items-center justify-center overflow-hidden ${className}`}
-      style={{
-        background: `linear-gradient(135deg, ${study.colors.from} 0%, ${study.colors.to} 100%)`,
-      }}
+      style={{ background: study.colors.from }}
     >
+      {/* emoji wallpaper */}
+      <div
+        className="absolute -inset-10 -rotate-6 text-3xl leading-[2.4] tracking-[1em] break-all opacity-20 select-none"
+        aria-hidden
+      >
+        {wallpaper}
+      </div>
+
       <span
-        className="font-display font-black select-none"
+        className="relative px-4 text-center font-display uppercase select-none"
         style={{
           color: study.colors.accent,
-          fontSize: 'clamp(4rem, 16cqw, 11rem)',
-          lineHeight: 1,
+          fontSize: 'clamp(1.8rem, 9cqw, 4rem)',
+          lineHeight: 0.95,
+          textShadow: '3px 3px 0 rgba(0,0,0,0.35)',
         }}
       >
-        {study.mark}
+        {study.client}
       </span>
-      <span className="absolute right-4 bottom-3 text-3xl opacity-80">{study.emoji}</span>
+
+      {/* served-fresh stamp */}
       <span
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(circle at 20% 15%, rgba(255,255,255,0.18) 0%, transparent 45%)',
-        }}
-      />
+        className="absolute right-3 bottom-3 grid size-16 rotate-12 place-items-center rounded-full border-2 font-mono text-[0.5rem] font-bold tracking-widest uppercase"
+        style={{ color: study.colors.accent, borderColor: study.colors.accent }}
+      >
+        Served
+        <br />
+        fresh
+      </span>
     </div>
   )
 }

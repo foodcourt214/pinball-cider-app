@@ -1,19 +1,24 @@
-@import '@fontsource-variable/fraunces';
+@import '@fontsource/anton';
+@import '@fontsource/space-mono';
+@import '@fontsource/space-mono/700.css';
 @import '@fontsource-variable/archivo';
 @import 'tailwindcss';
 
 @theme {
-  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-display: 'Anton', 'Archivo Variable', sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
   --font-sans: 'Archivo Variable', system-ui, sans-serif;
 
-  --color-cream: #faf6ee;
-  --color-cream-dark: #f1e9da;
+  /* Food court palette: menu-board black, tray red, neon amber, mall teal */
+  --color-paper: #f5eeda;
+  --color-paper-dark: #e9dfc4;
+  --color-board: #14100a;
+  --color-board-2: #201910;
   --color-ink: #1b1510;
-  --color-ink-soft: #4a4038;
-  --color-tomato: #e8481c;
-  --color-tomato-dark: #c53a13;
-  --color-mustard: #f5b324;
-  --color-teal: #1e6e62;
+  --color-red: #e33d26;
+  --color-red-dark: #bf2c17;
+  --color-amber: #ffb02e;
+  --color-teal: #2bc4ad;
 }
 
 html {
@@ -22,18 +27,77 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-cream);
+  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-mustard);
+  background: var(--color-amber);
   color: var(--color-ink);
 }
 
-/* Continuous horizontal ticker */
+/* ---------- Neon signage ---------- */
+.neon-amber {
+  color: #ffcf7d;
+  text-shadow:
+    0 0 4px rgba(255, 176, 46, 0.9),
+    0 0 16px rgba(255, 176, 46, 0.6),
+    0 0 40px rgba(255, 140, 20, 0.4);
+}
+
+.neon-red {
+  color: #ff8a76;
+  text-shadow:
+    0 0 4px rgba(227, 61, 38, 0.9),
+    0 0 16px rgba(227, 61, 38, 0.6),
+    0 0 40px rgba(227, 61, 38, 0.4);
+}
+
+.neon-teal {
+  color: #8df2e2;
+  text-shadow:
+    0 0 4px rgba(43, 196, 173, 0.9),
+    0 0 16px rgba(43, 196, 173, 0.6),
+    0 0 36px rgba(43, 196, 173, 0.4);
+}
+
+@keyframes neon-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.4;
+  }
+  94% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 0.6;
+  }
+  97% {
+    opacity: 1;
+  }
+}
+
+.flicker {
+  animation: neon-flicker 6s infinite;
+}
+
+/* ---------- LED read-o-board ticker ---------- */
+.led-text {
+  color: #ff5a3c;
+  text-shadow:
+    0 0 3px rgba(255, 90, 60, 0.9),
+    0 0 12px rgba(255, 60, 30, 0.55);
+  letter-spacing: 0.25em;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -44,9 +108,76 @@ body {
 }
 
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 45s linear infinite;
 }
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* ---------- Food court tile ---------- */
+.checker {
+  background-image: repeating-conic-gradient(
+    var(--color-ink) 0% 25%,
+    var(--color-paper) 0% 50%
+  );
+  background-size: 28px 28px;
+}
+
+/* ---------- Order tickets & receipts ---------- */
+.hard-shadow {
+  box-shadow: 5px 5px 0 var(--color-ink);
+}
+
+.hard-shadow-sm {
+  box-shadow: 3px 3px 0 var(--color-ink);
+}
+
+/* Perforated tear line with side notches. Set --notch to the color
+   behind the ticket so the punched holes read as cutouts. */
+.ticket-tear {
+  position: relative;
+  border-top: 2px dashed rgba(27, 21, 16, 0.25);
+}
+
+.ticket-tear::before,
+.ticket-tear::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--notch, var(--color-paper));
+}
+
+.ticket-tear::before {
+  left: -10px;
+}
+
+.ticket-tear::after {
+  right: -10px;
+}
+
+.barcode {
+  height: 34px;
+  background: repeating-linear-gradient(
+    90deg,
+    currentColor 0 2px,
+    transparent 2px 5px,
+    currentColor 5px 8px,
+    transparent 8px 10px,
+    currentColor 10px 11px,
+    transparent 11px 15px,
+    currentColor 15px 18px,
+    transparent 18px 20px
+  );
+}
+
+/* Dot leaders for menu-board items */
+.menu-dots {
+  flex: 1;
+  margin: 0 0.6em;
+  border-bottom: 2px dotted rgba(245, 238, 218, 0.35);
+  transform: translateY(-0.35em);
 }
