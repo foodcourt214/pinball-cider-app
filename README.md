@@ -1,16 +1,30 @@
-# React + Vite
+# Food Court Creative — site redesign
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A redesign of [foodcourtcreative.com](https://www.foodcourtcreative.com) built
+with React 19, Vite and Tailwind CSS 4. All 14 case studies from the live site
+are ported into `src/data/caseStudies.js`.
 
-Currently, two official plugins are available:
+## Develop
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```
+npm install
+npm run dev
+```
 
-## React Compiler
+## Build
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+npm run build   # outputs to dist/
+```
 
-## Expanding the ESLint configuration
+## Adding real imagery
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Case studies currently render art-directed placeholder covers in each brand's
+colors. To swap in real photography, see `src/assets/work/README.md` — drop a
+`cover.jpg` into the matching slug folder and it's picked up automatically.
+
+## Editing content
+
+Everything — copy, services, categories, brand colors — lives in
+`src/data/caseStudies.js`. Add a new case study by appending an object there;
+the work grid, filters and detail page are generated from the data.

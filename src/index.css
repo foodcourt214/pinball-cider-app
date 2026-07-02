@@ -1,16 +1,52 @@
-@import "tailwindcss";
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/archivo';
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces Variable', Georgia, serif;
+  --font-sans: 'Archivo Variable', system-ui, sans-serif;
+
+  --color-cream: #faf6ee;
+  --color-cream-dark: #f1e9da;
+  --color-ink: #1b1510;
+  --color-ink-soft: #4a4038;
+  --color-tomato: #e8481c;
+  --color-tomato-dark: #c53a13;
+  --color-mustard: #f5b324;
+  --color-teal: #1e6e62;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
-  background: #0f172a;
-  color: #e2e8f0;
-  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-#root {
-  min-height: 100vh;
+::selection {
+  background: var(--color-mustard);
+  color: var(--color-ink);
 }
 
-input[type="range"] {
-  accent-color: #f59e0b;
+/* Continuous horizontal ticker */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
