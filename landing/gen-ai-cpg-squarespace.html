@@ -1,0 +1,518 @@
+<!-- ============================================================
+  FOOD COURT CREATIVE — "Gen AI for CPG" landing page
+  Squarespace Code Block embed. Paste this whole file into ONE
+  Code Block (Mode: HTML). All styles are scoped to #fcc-genai
+  so they won't affect the rest of the site. The site's own
+  header/footer provide the FCC chrome.
+============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Baloo+2:wght@800&family=Inter:wght@400;600&family=Pacifico&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+#fcc-genai{
+  --paper:#f3f0ea;
+  --grey:#ebebe7;
+  --blush:#fbeae2;
+  --cream:#faf3e0;
+  --lavender:#e8dff5;
+  --litpink:#fce3ef;
+  --ink:#0e0e10;
+  --ink-soft:rgba(14,14,16,.72);
+  --space:#131020;
+  --pink:#ff3ea5;
+  --magenta:#e438d8;
+  --bubble:#ff8ad8;
+  --lav:#c9a4ff;
+  --orange:#ff8a3c;
+  --purple:#a06bf0;
+  --chrome:#c9d1e0;
+  --silver:#a8b0c2;
+  --red:#e03a2f;
+  --grad-hero:linear-gradient(100deg,#ff3ea5 0%,#e438d8 55%,#c9a4ff 110%);
+  --display:'Anton','Arial Narrow',Impact,sans-serif;
+  --heavy:'Archivo Black','Arial Black',sans-serif;
+  --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --mono:'Space Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --bubbleface:'Baloo 2',ui-rounded,'Arial Rounded MT Bold',sans-serif;
+  --script:'Pacifico','Brush Script MT','Segoe Script',cursive;
+}
+#fcc-genai *{margin:0;padding:0;box-sizing:border-box}
+#fcc-genai{scroll-behavior:smooth}
+#fcc-genai{font-family:var(--body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+#fcc-genai img,#fcc-genai svg{max-width:100%;display:block}
+#fcc-genai a{color:inherit}
+#fcc-genai ::selection{background:var(--pink);color:#fff}
+#fcc-genai .site-header{background:#fff;border-bottom:2px solid var(--ink)}
+#fcc-genai .checker{height:12px;background:repeating-conic-gradient(var(--red) 0% 25%,#fff 0% 50%);background-size:16px 16px}
+#fcc-genai .lockup{display:flex;flex-direction:column;align-items:center;padding:20px 16px 16px;text-decoration:none}
+#fcc-genai .lockup .foodcourt{font-family:var(--bubbleface);font-weight:800;font-size:clamp(26px,4vw,34px);letter-spacing:.5px;color:#111;line-height:1}
+#fcc-genai .lockup .creativeco{font-family:var(--script);color:var(--red);font-size:clamp(15px,2.2vw,19px);margin-top:2px;transform:rotate(-2deg)}
+#fcc-genai .pagenav{position:sticky;top:0;z-index:50;background:rgba(243,240,234,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:2px solid var(--ink)}
+#fcc-genai .pagenav ul{display:flex;justify-content:center;gap:clamp(14px,3.6vw,40px);list-style:none;padding:13px 16px}
+#fcc-genai .pagenav a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink);font-weight:700;transition:color .2s}
+#fcc-genai .pagenav a:hover{color:var(--pink)}
+#fcc-genai .pagenav a.cta{color:var(--pink)}
+#fcc-genai .shell{max-width:1240px;margin:0 auto;padding:0 clamp(14px,2.6vw,32px)}
+#fcc-genai .cgrid{display:grid;gap:2px;background:var(--ink);border:2px solid var(--ink)}
+#fcc-genai .cell{background:var(--grey);padding:clamp(24px,3.4vw,48px);position:relative}
+#fcc-genai .mono-label{font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+#fcc-genai .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:9px;vertical-align:1px}
+#fcc-genai .chips{display:flex;flex-wrap:wrap;gap:8px}
+#fcc-genai .pill{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.02em;color:var(--ink);background:#fff;border:1.5px solid var(--ink);padding:6px 13px;border-radius:999px;white-space:nowrap}
+#fcc-genai .grad-text{background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;color:transparent}
+#fcc-genai .section-band{padding:clamp(48px,6vw,84px) 0 clamp(20px,3vw,34px)}
+#fcc-genai .section-band .mono-label{color:var(--pink)}
+#fcc-genai .section-band h2{font-family:var(--heavy);font-size:clamp(34px,5.4vw,64px);line-height:1.02;margin-top:12px;letter-spacing:-.01em}
+#fcc-genai .section-band h2 .script{font-family:var(--script);font-weight:400;font-size:.85em;color:var(--pink)}
+#fcc-genai .section-band p.lede{margin-top:14px;font-size:clamp(15.5px,1.5vw,18px);line-height:1.65;color:var(--ink-soft);max-width:620px}
+#fcc-genai .reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+#fcc-genai .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){#fcc-genai .reveal{opacity:1;transform:none;transition:none}
+#fcc-genai *{animation:none!important}}
+#fcc-genai .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);transition:transform .15s,box-shadow .15s;background:#fff;color:var(--ink)}
+#fcc-genai .btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+#fcc-genai .btn-primary{background:var(--pink);color:#fff}
+#fcc-genai .hero-grid{grid-template-columns:1.08fr .92fr;margin-top:clamp(18px,3vw,34px)}
+#fcc-genai .hero-copy{display:flex;flex-direction:column;justify-content:center}
+#fcc-genai .hero-copy h1{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.95;font-size:clamp(48px,7vw,104px);margin:18px 0 20px;letter-spacing:.01em}
+#fcc-genai .hero-copy .sub{color:var(--ink-soft);font-size:clamp(15.5px,1.5vw,18.5px);line-height:1.65;max-width:520px}
+#fcc-genai .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-top:30px}
+#fcc-genai .window{background:var(--space);position:relative;overflow:hidden;min-height:clamp(360px,40vw,560px);padding:0}
+#fcc-genai .window .nebula{position:absolute;inset:-20%;background:
+  radial-gradient(46% 42% at 74% 26%,rgba(228,56,216,.4),transparent 70%),
+  radial-gradient(52% 46% at 86% 82%,rgba(255,62,165,.32),transparent 70%),
+  radial-gradient(30% 26% at 12% 80%,rgba(201,164,255,.2),transparent 70%)}
+#fcc-genai .stars{position:absolute;inset:0;background-repeat:repeat;background-image:radial-gradient(1.4px 1.4px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 120px,rgba(255,255,255,.8),transparent),radial-gradient(1.8px 1.8px at 160px 60px,rgba(255,138,216,.9),transparent),radial-gradient(1px 1px at 230px 170px,rgba(255,255,255,.6),transparent),radial-gradient(1.3px 1.3px at 300px 90px,rgba(201,164,255,.9),transparent);background-size:340px 220px;opacity:.9}
+#fcc-genai .grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E")}
+#fcc-genai .planet{position:absolute;right:-16%;bottom:-30%;width:72%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 32% 28%,#ff8ad8 0%,#e438d8 34%,#7a1f8f 68%,#2a0f3d 100%);box-shadow:inset -30px -40px 80px rgba(0,0,0,.5),0 0 90px rgba(228,56,216,.45)}
+#fcc-genai .planet::after{content:"";position:absolute;left:-18%;top:38%;width:136%;height:26%;border-radius:50%;border:2px solid rgba(201,209,224,.55);border-top-color:rgba(201,209,224,.15);transform:rotate(-14deg)}
+#fcc-genai .ufo{position:absolute;right:8%;top:7%;width:90px;animation:drift 9s ease-in-out infinite}
+#fcc-genai .pack{position:absolute;left:10%;top:13%;width:clamp(190px,20vw,260px);aspect-ratio:1;animation:float 7s ease-in-out infinite}
+#fcc-genai .pack .roll{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffc3e8 0%,#ff8ad8 30%,#ff3ea5 62%,#b81f78 100%);box-shadow:0 30px 60px rgba(0,0,0,.55),inset -14px -20px 42px rgba(120,10,80,.55),inset 10px 12px 30px rgba(255,255,255,.35)}
+#fcc-genai .pack .label{position:absolute;inset:13%;border-radius:50%;background:radial-gradient(circle at 40% 32%,#fff 0%,#ffe9f6 55%,#ffc3e8 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:inset 0 0 0 5px var(--pink),inset 0 0 0 8px #fff}
+#fcc-genai .pack .label .tiny{font-size:8px;letter-spacing:.32em;font-weight:600;color:#b81f78;text-transform:uppercase}
+#fcc-genai .pack .label .name{font-family:var(--bubbleface);font-weight:800;color:#1c1030;font-size:clamp(24px,2.6vw,32px);line-height:.95;text-shadow:2px 2px 0 var(--bubble)}
+#fcc-genai .pack .label .name span{display:block;color:var(--pink);text-shadow:2px 2px 0 #1c1030}
+#fcc-genai .pack .label .flavor{font-family:var(--script);color:var(--magenta);font-size:clamp(10px,1.1vw,13px);margin-top:5px}
+#fcc-genai .pack .shine{position:absolute;top:9%;left:16%;width:26%;height:14%;border-radius:50%;background:rgba(255,255,255,.75);filter:blur(6px);transform:rotate(-24deg)}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-18px) rotate(-2deg)}}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(-16px,8px)}}
+#fcc-genai .window .tag{position:absolute;left:16px;bottom:16px;font-family:var(--mono);font-weight:700;display:inline-flex;gap:7px;align-items:center;font-size:11px;color:#fff;background:rgba(11,10,20,.75);border:1.5px solid var(--bubble);border-radius:999px;padding:7px 13px}
+#fcc-genai .window .tag b{color:var(--bubble)}
+#fcc-genai .marquee{background:var(--ink);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);overflow:hidden;margin-top:clamp(18px,3vw,34px)}
+#fcc-genai .marquee .track{display:flex;gap:0;width:max-content;animation:scroll 30s linear infinite}
+#fcc-genai .marquee span.name{font-family:var(--heavy);color:#fff;font-size:clamp(17px,2vw,24px);letter-spacing:.06em;padding:16px 26px;white-space:nowrap}
+#fcc-genai .marquee span.star{color:var(--pink);font-size:clamp(15px,1.8vw,20px);align-self:center}
+#fcc-genai .marquee span.star:nth-of-type(4n+1){color:var(--orange)}
+#fcc-genai .marquee span.star:nth-of-type(4n+3){color:var(--purple)}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#fcc-genai .step-row{grid-template-columns:1fr 1fr}
+#fcc-genai .step-cell{display:flex;flex-direction:column;justify-content:center;gap:16px}
+#fcc-genai .step-cell h3{font-family:var(--heavy);font-size:clamp(26px,3.2vw,44px);line-height:1;letter-spacing:-.01em}
+#fcc-genai .step-cell p{font-size:clamp(14.5px,1.35vw,17px);line-height:1.65;color:var(--ink-soft);max-width:480px}
+#fcc-genai .art-cell{min-height:clamp(240px,26vw,360px);display:grid;place-items:center;overflow:hidden}
+#fcc-genai .doc{background:#fff;border:2px solid var(--ink);border-radius:10px;box-shadow:6px 6px 0 rgba(14,14,16,.85);width:min(62%,300px);padding:22px;transform:rotate(-2deg)}
+#fcc-genai .doc .doc-title{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+#fcc-genai .doc .stamp{font-family:var(--mono);font-weight:700;font-size:9px;color:var(--red);border:2px solid var(--red);border-radius:6px;padding:2px 7px;transform:rotate(6deg);letter-spacing:.08em}
+#fcc-genai .doc .line{height:8px;border-radius:4px;background:rgba(14,14,16,.14);margin:8px 0}
+#fcc-genai .doc .line.w60{width:60%}
+#fcc-genai .doc .line.w80{width:80%}
+#fcc-genai .doc .line.pink{background:var(--bubble);width:44%}
+#fcc-genai .promptcards{position:relative;width:min(64%,300px);height:190px}
+#fcc-genai .pcard{position:absolute;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:14px 16px;width:86%;font-family:var(--mono);font-size:11.5px;line-height:1.55;box-shadow:5px 5px 0 rgba(14,14,16,.85)}
+#fcc-genai .pcard b{color:var(--pink)}
+#fcc-genai .genning{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(60%,280px)}
+#fcc-genai .genning i{display:block;aspect-ratio:1;border-radius:8px;border:2px solid var(--ink)}
+#fcc-genai .genning i.pick{outline:3px solid var(--pink);outline-offset:3px}
+#fcc-genai .curation{display:flex;gap:22px;align-items:center}
+#fcc-genai .polar{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:8px 8px 26px;width:130px;box-shadow:5px 5px 0 rgba(14,14,16,.85);position:relative}
+#fcc-genai .polar .ph{aspect-ratio:1;border-radius:4px}
+#fcc-genai .polar .verdict{position:absolute;right:-13px;top:-13px;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:16px;background:#fff}
+#fcc-genai .polar .verdict.yes{background:var(--pink);color:#fff}
+#fcc-genai .polar.rot1{transform:rotate(-4deg)}
+#fcc-genai .polar.rot2{transform:rotate(3deg)}
+#fcc-genai .serve-art{position:relative;display:grid;place-items:center;width:min(60%,280px)}
+#fcc-genai .serve-art .mini{position:relative;width:70%;aspect-ratio:1}
+#fcc-genai .spark{position:absolute;font-size:26px;color:var(--pink)}
+#fcc-genai .what-grid{grid-template-columns:.9fr 1.05fr 1.05fr}
+#fcc-genai .black-cell{background:var(--ink);color:#fff;grid-row:span 3;display:flex;flex-direction:column;gap:22px}
+#fcc-genai .black-cell .big{font-family:var(--heavy);font-size:clamp(44px,5vw,72px);line-height:.95;color:#fff}
+#fcc-genai .black-cell .script{font-family:var(--script);color:var(--pink);font-size:clamp(26px,3vw,42px);transform:rotate(-2deg);display:inline-block}
+#fcc-genai .black-cell p{font-family:var(--mono);font-size:13px;line-height:1.75;color:rgba(255,255,255,.78);max-width:340px}
+#fcc-genai .feat h3{font-family:var(--heavy);font-size:clamp(17px,1.7vw,22px);display:flex;align-items:center;gap:12px;margin-bottom:12px}
+#fcc-genai .feat h3 .glyph{font-size:18px}
+#fcc-genai .feat p{font-size:14px;line-height:1.6;color:var(--ink-soft);margin-bottom:16px}
+#fcc-genai .feat .pill{font-size:11px;padding:5px 11px}
+#fcc-genai .special-grid{grid-template-columns:1fr 1fr}
+#fcc-genai .intro-cell h3{font-family:var(--heavy);font-size:clamp(30px,3.6vw,50px);line-height:1;margin:14px 0 6px}
+#fcc-genai .intro-cell .from{font-family:var(--script);color:var(--pink);font-size:clamp(17px,2vw,24px);display:inline-block;transform:rotate(-2deg);margin-bottom:16px}
+#fcc-genai .intro-cell p{font-size:clamp(14.5px,1.4vw,17px);line-height:1.65;color:var(--ink-soft);max-width:480px}
+#fcc-genai .mood-cell{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+#fcc-genai .mood-card{background:#fff;border:2px solid var(--ink);border-radius:8px;padding:8px 8px 12px;width:clamp(100px,11vw,150px);box-shadow:5px 5px 0 rgba(14,14,16,.85)}
+#fcc-genai .mood-card .art{aspect-ratio:4/3;border-radius:4px;margin-bottom:8px}
+#fcc-genai .mood-card .mood-cap{font-family:var(--script);font-size:12px;text-align:center;color:#6b4a8f}
+#fcc-genai .mood-card:nth-child(1){transform:rotate(-3deg)}
+#fcc-genai .mood-card:nth-child(2){transform:rotate(2deg)}
+#fcc-genai .mood-card:nth-child(3){transform:rotate(-1.5deg)}
+#fcc-genai .mood-card:nth-child(4){transform:rotate(2.5deg)}
+#fcc-genai .vgrid4{grid-template-columns:repeat(4,1fr)}
+#fcc-genai .vcell{background:#fff;padding:0;display:flex;flex-direction:column}
+#fcc-genai .vcell .art{position:relative;aspect-ratio:1;overflow:hidden}
+#fcc-genai .vcell .meta{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-top:2px solid var(--ink)}
+#fcc-genai .vcell .meta .n{font-family:var(--heavy);font-size:12px;letter-spacing:.01em}
+#fcc-genai .vcell .meta .v{font-family:var(--mono);font-weight:700;font-size:10.5px;color:var(--pink);white-space:nowrap}
+#fcc-genai .orb{position:absolute;border-radius:50%}
+#fcc-genai .ground{position:absolute;left:0;right:0;bottom:0;height:26%;border-radius:50% 50% 0 0/100% 100% 0 0}
+#fcc-genai .shelf3{grid-template-columns:1fr 1fr 1fr}
+#fcc-genai .shot{position:relative;min-height:clamp(240px,24vw,340px);overflow:hidden;padding:0}
+#fcc-genai .shot .bg{position:absolute;inset:0}
+#fcc-genai .shot .pedestal{position:absolute;left:50%;bottom:10%;transform:translateX(-50%);width:64%;height:8%;border-radius:50%;background:rgba(11,10,20,.4);filter:blur(6px)}
+#fcc-genai .shot .mini-pack{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%)}
+#fcc-genai .caption-cell{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--litpink)}
+#fcc-genai .caption-cell .badge{font-family:var(--mono);font-weight:700;display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--ink);padding:8px 15px;border-radius:999px;white-space:nowrap}
+#fcc-genai .caption-cell span.txt{font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+#fcc-genai .check3{grid-template-columns:repeat(3,1fr)}
+#fcc-genai .stat .big{font-family:var(--heavy);font-size:clamp(26px,2.9vw,40px);line-height:1.05;letter-spacing:-.01em}
+#fcc-genai .stat p{margin-top:14px;color:var(--ink-soft);font-size:14px;line-height:1.65;max-width:330px}
+#fcc-genai .stat .dot{width:12px;height:12px;margin-bottom:16px;display:block}
+#fcc-genai .cta-wrap{padding:clamp(56px,7vw,100px) 0}
+#fcc-genai .cta-card{background:#fff;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);text-align:center;padding:clamp(50px,6.4vw,88px) clamp(22px,4vw,48px);position:relative;overflow:hidden}
+#fcc-genai .cta-card::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:repeating-conic-gradient(var(--pink) 0% 25%,#fff 0% 50%);background-size:12px 12px}
+#fcc-genai .cta-card .psst{font-family:var(--script);color:var(--pink);font-size:clamp(18px,2.4vw,24px);display:inline-block;transform:rotate(-2deg)}
+#fcc-genai .cta-card h2{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.95;font-size:clamp(52px,8vw,110px);margin:14px 0 18px}
+#fcc-genai .cta-card .sub{color:var(--ink-soft);margin:0 auto 34px;max-width:520px;font-size:clamp(15px,1.5vw,18px);line-height:1.65}
+#fcc-genai .site-footer{background:#fff;border-top:2px solid var(--ink)}
+#fcc-genai .foot-inner{max-width:1240px;margin:0 auto;padding:34px clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+#fcc-genai .foot-lockup{text-align:center;text-decoration:none}
+#fcc-genai .foot-lockup .foodcourt{font-family:var(--bubbleface);font-weight:800;font-size:20px;color:#111;line-height:1}
+#fcc-genai .foot-lockup .creativeco{font-family:var(--script);color:var(--red);font-size:12px}
+#fcc-genai .foot-links{display:flex;gap:22px;list-style:none;flex-wrap:wrap}
+#fcc-genai .foot-links a{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--ink);text-decoration:none}
+#fcc-genai .foot-links a:hover{color:var(--red)}
+#fcc-genai .foot-note{font-size:12px;color:rgba(14,14,16,.5)}
+@media (max-width:960px){#fcc-genai .hero-grid{grid-template-columns:1fr}
+#fcc-genai .step-row{grid-template-columns:1fr}
+#fcc-genai .step-row .art-cell{order:2}
+#fcc-genai .what-grid{grid-template-columns:1fr 1fr}
+#fcc-genai .black-cell{grid-column:span 2;grid-row:auto}
+#fcc-genai .special-grid{grid-template-columns:1fr}
+#fcc-genai .vgrid4{grid-template-columns:repeat(2,1fr)}
+#fcc-genai .shelf3{grid-template-columns:1fr}
+#fcc-genai .check3{grid-template-columns:1fr}}
+@media (max-width:560px){#fcc-genai .what-grid{grid-template-columns:1fr}
+#fcc-genai .black-cell{grid-column:span 1}
+#fcc-genai .pagenav ul{gap:18px;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}
+#fcc-genai .pagenav ul::-webkit-scrollbar{display:none}
+#fcc-genai .pagenav a{font-size:10.5px;white-space:nowrap}
+#fcc-genai .mood-cell{padding:24px}}
+#fcc-genai{font-family:var(--body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");margin:0;padding-bottom:12px}
+</style>
+<div id="fcc-genai">
+<nav class="pagenav" aria-label="Page sections">
+  <ul>
+    <li><a href="#system">How It's Cooked</a></li>
+    <li><a href="#case-study">Today's Special</a></li>
+    <li><a href="#capabilities">What We Cook</a></li>
+    <li><a href="#why">The Check</a></li>
+    <li><a href="#contact" class="cta">Book a Table</a></li>
+  </ul>
+</nav>
+
+<!-- ======= HERO ======= -->
+<div class="shell">
+  <section class="cgrid hero-grid reveal" id="top">
+    <div class="cell hero-copy">
+      <span class="mono-label"><span class="dot" style="background:var(--pink)"></span>Gen AI for food &amp; beverage brands</span>
+      <h1>The recipe is the <span class="grad-text">prompt.</span></h1>
+      <p class="sub">We cook raw product ideas into shelf-ready, screen-ready content with generative AI — served in days, not weeks, for a slice of the usual production budget.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#system">See how it's cooked</a>
+        <a class="btn" href="#case-study">Today's special</a>
+      </div>
+    </div>
+    <div class="cell window grain" aria-hidden="true">
+      <div class="nebula"></div>
+      <div class="stars"></div>
+      <div class="planet"></div>
+      <svg class="ufo" viewBox="0 0 120 60" fill="none">
+        <ellipse cx="60" cy="34" rx="52" ry="14" fill="#c9d1e0"/>
+        <ellipse cx="60" cy="30" rx="52" ry="13" fill="url(#ufog)"/>
+        <ellipse cx="60" cy="18" rx="22" ry="14" fill="rgba(255,138,216,.85)"/>
+        <circle cx="34" cy="32" r="3" fill="#ff3ea5"/><circle cx="60" cy="36" r="3" fill="#ffb48a"/><circle cx="86" cy="32" r="3" fill="#c9a4ff"/>
+        <defs><linearGradient id="ufog" x1="8" y1="20" x2="112" y2="42"><stop stop-color="#eef2f8"/><stop offset="1" stop-color="#8f9ab0"/></linearGradient></defs>
+      </svg>
+      <div class="pack">
+        <div class="roll"></div>
+        <div class="label">
+          <span class="tiny">Fruity</span>
+          <span class="name">Space<span>Bandit</span></span>
+          <span class="flavor">bubble gum tape</span>
+        </div>
+        <div class="shine"></div>
+      </div>
+      <div class="tag"><b>100% AI-GENERATED.</b> THAT'S THE POINT.</div>
+    </div>
+  </section>
+</div>
+
+<!-- ======= MARQUEE ======= -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span class="name">SPACE BANDIT</span><span class="star" style="color:var(--pink)">★</span>
+    <span class="name">GALACTIC BREWS</span><span class="star" style="color:var(--orange)">★</span>
+    <span class="name">MOON DINER</span><span class="star" style="color:var(--purple)">★</span>
+    <span class="name">FIZZ PLANET</span><span class="star" style="color:var(--pink)">★</span>
+    <span class="name">CHEW-CHEW COSMIC</span><span class="star" style="color:var(--orange)">★</span>
+    <span class="name">ORBIT ORANGEADE</span><span class="star" style="color:var(--purple)">★</span>
+    <span class="name">SPACE BANDIT</span><span class="star" style="color:var(--pink)">★</span>
+    <span class="name">GALACTIC BREWS</span><span class="star" style="color:var(--orange)">★</span>
+    <span class="name">MOON DINER</span><span class="star" style="color:var(--purple)">★</span>
+    <span class="name">FIZZ PLANET</span><span class="star" style="color:var(--pink)">★</span>
+    <span class="name">CHEW-CHEW COSMIC</span><span class="star" style="color:var(--orange)">★</span>
+    <span class="name">ORBIT ORANGEADE</span><span class="star" style="color:var(--purple)">★</span>
+  </div>
+</div>
+
+<!-- ======= HOW IT'S COOKED ======= -->
+<div class="shell" id="system">
+  <div class="section-band reveal">
+    <span class="mono-label">[ How it works ]</span>
+    <h2>How it's cooked. <span class="script">straight off our board</span></h2>
+    <p class="lede">Every campaign runs the same kitchen line. Brief in, banger out — five steps, zero mystery.</p>
+  </div>
+  <section class="cgrid step-row reveal">
+    <div class="cell step-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--pink)"></span>Step 01</span>
+      <h3>Brand Brief</h3>
+      <p>Your product, audience, and appetite. We take the raw ingredients and figure out what the campaign needs to taste like.</p>
+      <div class="chips"><span class="pill">Product Truths</span><span class="pill">Audience</span><span class="pill">Appetite</span></div>
+    </div>
+    <div class="cell art-cell" style="background:var(--blush)" aria-hidden="true">
+      <div class="doc">
+        <div class="doc-title">brief_v01.pdf <span class="stamp">TASTY</span></div>
+        <div class="line w80"></div><div class="line"></div><div class="line w60"></div><div class="line pink"></div><div class="line w80"></div>
+      </div>
+    </div>
+  </section>
+  <section class="cgrid step-row reveal" style="border-top:none">
+    <div class="cell art-cell" style="background:var(--lavender)" aria-hidden="true">
+      <div class="promptcards">
+        <div class="pcard" style="top:0;left:0;transform:rotate(-3deg)"><b>&gt;</b> glossy bubble-gum tape roll, hot pink, floating in a candy nebula, studio lighting…</div>
+        <div class="pcard" style="bottom:0;right:0;transform:rotate(2deg)"><b>&gt;</b> chrome accents, soft shadows, shelf-ready pack face, 3D render style…</div>
+      </div>
+    </div>
+    <div class="cell step-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--orange)"></span>Step 02</span>
+      <h3>Prompt Development</h3>
+      <p>The brief becomes recipes — prompt systems written, tasted, and refined until the model speaks fluent brand.</p>
+      <div class="chips"><span class="pill">Flavor Notes</span><span class="pill">Art Direction</span><span class="pill">Recipes</span></div>
+    </div>
+  </section>
+  <section class="cgrid step-row reveal" style="border-top:none">
+    <div class="cell step-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--purple)"></span>Step 03</span>
+      <h3>AI Image Generation</h3>
+      <p>Multiple model passes put hundreds of variations on the burner — packaging, scenes, characters, whole worlds.</p>
+      <div class="chips"><span class="pill">Multi-Model</span><span class="pill">×∞ Variations</span><span class="pill">Image + Video</span></div>
+    </div>
+    <div class="cell art-cell" style="background:var(--cream)" aria-hidden="true">
+      <div class="genning">
+        <i style="background:linear-gradient(135deg,#ff3ea5,#c9a4ff)"></i>
+        <i style="background:linear-gradient(135deg,#ff8ad8,#ffb48a)"></i>
+        <i style="background:linear-gradient(135deg,#e438d8,#2a0f3d)"></i>
+        <i style="background:linear-gradient(135deg,#c9a4ff,#ff3ea5)"></i>
+        <i class="pick" style="background:radial-gradient(circle at 36% 30%,#ffc3e8,#ff3ea5)"></i>
+        <i style="background:linear-gradient(135deg,#ffb48a,#ff8ad8)"></i>
+        <i style="background:linear-gradient(135deg,#2a0f3d,#e438d8)"></i>
+        <i style="background:linear-gradient(135deg,#ff3ea5,#ffb48a)"></i>
+        <i style="background:linear-gradient(135deg,#c9a4ff,#e438d8)"></i>
+      </div>
+    </div>
+  </section>
+  <section class="cgrid step-row reveal" style="border-top:none">
+    <div class="cell art-cell" style="background:var(--litpink)" aria-hidden="true">
+      <div class="curation">
+        <div class="polar rot1"><div class="ph" style="background:radial-gradient(circle at 36% 30%,#ffc3e8,#ff3ea5 60%,#b81f78)"></div><div class="verdict yes">✓</div></div>
+        <div class="polar rot2"><div class="ph" style="background:linear-gradient(150deg,#c9d1e0,#8f9ab0)"></div><div class="verdict">✕</div></div>
+      </div>
+    </div>
+    <div class="cell step-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--pink)"></span>Step 04</span>
+      <h3>Curation &amp; Refinement</h3>
+      <p>Human taste picks the keepers and plates them properly. This is where the humans live — salt &amp; pepper to taste.</p>
+      <div class="chips"><span class="pill">Human Taste</span><span class="pill">Keepers Only</span><span class="pill">Polish</span></div>
+    </div>
+  </section>
+  <section class="cgrid step-row reveal" style="border-top:none">
+    <div class="cell step-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--orange)"></span>Step 05</span>
+      <h3>Production-Ready Asset</h3>
+      <p>Polished and plated for every channel — retail decks, socials, motion spots, 3D worlds. Served hot.</p>
+      <div class="chips"><span class="pill">Stills</span><span class="pill">Video</span><span class="pill">3D</span></div>
+    </div>
+    <div class="cell art-cell" style="background:var(--blush)" aria-hidden="true">
+      <div class="serve-art">
+        <span class="spark" style="left:4%;top:8%">✦</span>
+        <span class="spark" style="right:6%;bottom:12%;color:var(--purple)">✦</span>
+        <div class="mini">
+          <div class="pack" style="position:relative;inset:auto;width:100%;animation:none;transform:rotate(-5deg)">
+            <div class="roll"></div>
+            <div class="label"><span class="tiny">Fruity</span><span class="name" style="font-size:26px">Space<span>Bandit</span></span></div>
+            <div class="shine"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ======= TODAY'S SPECIAL: SPACE BANDIT ======= -->
+<div class="shell" id="case-study">
+  <div class="section-band reveal">
+    <span class="mono-label">[ Case study ]</span>
+    <h2>Today's special. <span class="script">Space Bandit™</span></h2>
+    <p class="lede">An original bubble-gum-tape candy brand — named, designed, and rendered entirely with AI. No factory. No photographer. No gravity.</p>
+  </div>
+  <section class="cgrid special-grid reveal">
+    <div class="cell intro-cell">
+      <span class="mono-label"><span class="dot" style="background:var(--pink)"></span>01 — The concept</span>
+      <h3>A candy heist in deep space</h3>
+      <span class="from">from the Galactic Brews universe</span>
+      <p>One mood board set the world: diner-classic Americana on a road trip through a bubblegum galaxy. Everything downstream obeys it.</p>
+    </div>
+    <div class="cell mood-cell" style="background:var(--cream)">
+      <div class="mood-card"><div class="art" style="background:linear-gradient(150deg,#1c1030 0%,#7a1f8f 55%,#ff3ea5 100%)"></div><div class="mood-cap">a diner in deep space</div></div>
+      <div class="mood-card"><div class="art" style="background:linear-gradient(140deg,#ff8ad8,#ffb48a 60%,#fff3e8)"></div><div class="mood-cap">bubblegum &amp; chrome</div></div>
+      <div class="mood-card"><div class="art" style="background:radial-gradient(circle at 40% 36%,#fff 6%,#ff8ad8 22%,#e438d8 66%,#2a0f3d)"></div><div class="mood-cap">candy-aisle sci-fi</div></div>
+      <div class="mood-card"><div class="art" style="background:linear-gradient(160deg,#ff3ea5,#c9a4ff)"></div><div class="mood-cap">hot pink, always</div></div>
+    </div>
+  </section>
+  <div class="section-band reveal" style="padding-top:clamp(26px,3.4vw,44px)">
+    <span class="mono-label"><span class="dot" style="background:var(--purple)"></span>02 — The exploration, generated variations</span>
+  </div>
+  <section class="cgrid vgrid4 reveal">
+    <div class="vcell"><div class="art" style="background:radial-gradient(circle at 50% 40%,#ff8ad8,#b81f78 70%)">
+      <div class="orb" style="left:22%;top:16%;width:56%;aspect-ratio:1;background:radial-gradient(circle at 36% 30%,#fff,#dfe6f2 40%,#8f9ab0)"></div>
+      <div class="orb" style="left:31%;top:30%;width:38%;aspect-ratio:1;background:radial-gradient(circle at 36% 30%,#6b4a8f 0%,#241a2e 55%,#12102a 100%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.8)"></div>
+      <div class="orb" style="left:38%;top:38%;width:9%;aspect-ratio:1;background:#ff8ad8;filter:blur(1px)"></div>
+      <div class="orb" style="left:52%;top:48%;width:12%;aspect-ratio:1;background:radial-gradient(circle at 38% 32%,#ffc3e8,#ff3ea5)"></div>
+    </div><div class="meta"><span class="n">ASTRONAUT HELMET</span><span class="v">FLUX·v03</span></div></div>
+    <div class="vcell"><div class="art" style="background:linear-gradient(180deg,#2a0f3d,#7a1f8f)">
+      <div class="orb" style="left:26%;top:18%;width:48%;height:14%;border-radius:50%;background:linear-gradient(180deg,#eef2f8,#8f9ab0)"></div>
+      <div style="position:absolute;left:38%;top:30%;width:24%;height:44%;background:linear-gradient(180deg,rgba(255,138,216,.85),transparent);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%)"></div>
+      <div class="orb" style="left:44%;top:58%;width:12%;aspect-ratio:1;background:radial-gradient(circle at 38% 32%,#ffc3e8,#ff3ea5)"></div>
+    </div><div class="meta"><span class="n">UFO BEAM-UP</span><span class="v">FLUX·v07</span></div></div>
+    <div class="vcell"><div class="art" style="background:linear-gradient(180deg,#ff8ad8 0%,#e438d8 60%,#7a1f8f)">
+      <div style="position:absolute;left:14%;bottom:22%;width:72%;height:48%;background:linear-gradient(160deg,#ffc3e8,#b81f78);clip-path:polygon(50% 0,100% 100%,0 100%)"></div>
+      <div class="orb" style="left:44%;top:22%;width:12%;aspect-ratio:1;background:#fff;opacity:.9;filter:blur(2px)"></div>
+      <div class="ground" style="background:linear-gradient(180deg,#ffb48a,#ff8ad8)"></div>
+    </div><div class="meta"><span class="n">BUBBLEGUM VOLCANO</span><span class="v">FLUX·v11</span></div></div>
+    <div class="vcell"><div class="art" style="background:radial-gradient(circle at 60% 30%,#ffc3e8,#ff3ea5 55%,#b81f78)">
+      <div class="orb" style="left:18%;top:18%;width:64%;aspect-ratio:1;background:radial-gradient(circle at 34% 30%,#ffe9f6,#ff8ad8 45%,#e438d8);box-shadow:inset -8px -12px 24px rgba(120,10,80,.5)"></div>
+      <div class="orb" style="left:34%;top:34%;width:32%;aspect-ratio:1;background:radial-gradient(circle at 40% 34%,#fff,#ffc3e8)"></div>
+    </div><div class="meta"><span class="n">PACK CLOSE-UP</span><span class="v">FLUX·v02</span></div></div>
+    <div class="vcell"><div class="art" style="background:linear-gradient(180deg,#12102a,#4a1560)">
+      <div class="orb" style="left:30%;top:14%;width:40%;aspect-ratio:1;background:radial-gradient(circle at 36% 30%,#ffc3e8,#ff3ea5)"></div>
+      <div style="position:absolute;left:36%;top:52%;width:6%;height:34%;background:linear-gradient(180deg,#ff8ad8,transparent);border-radius:999px"></div>
+      <div style="position:absolute;left:48%;top:52%;width:6%;height:28%;background:linear-gradient(180deg,#ff8ad8,transparent);border-radius:999px"></div>
+      <div style="position:absolute;left:58%;top:52%;width:6%;height:38%;background:linear-gradient(180deg,#ff8ad8,transparent);border-radius:999px"></div>
+    </div><div class="meta"><span class="n">GUM-TAPE JELLYFISH</span><span class="v">FLUX·v09</span></div></div>
+    <div class="vcell"><div class="art" style="background:linear-gradient(180deg,#ffb48a 0%,#ff8ad8 50%,#e438d8)">
+      <div style="position:absolute;left:8%;bottom:18%;width:84%;height:52%;border:14px solid #ffc3e8;border-bottom:none;border-radius:200px 200px 0 0"></div>
+      <div class="ground" style="background:linear-gradient(180deg,#ffc3e8,#ff8ad8)"></div>
+    </div><div class="meta"><span class="n">CANDY CANYON ARCH</span><span class="v">FLUX·v05</span></div></div>
+    <div class="vcell"><div class="art" style="background:linear-gradient(180deg,#1c1030,#2a0f3d)">
+      <div class="orb" style="right:12%;top:12%;width:22%;aspect-ratio:1;background:radial-gradient(circle at 36% 30%,#fff,#c9d1e0)"></div>
+      <div style="position:absolute;left:16%;bottom:24%;width:68%;height:34%;background:linear-gradient(180deg,#ff3ea5,#b81f78);border-radius:14px 14px 4px 4px"></div>
+      <div style="position:absolute;left:24%;bottom:38%;width:52%;height:8%;background:#ffe9f6;border-radius:4px;box-shadow:0 0 18px #ff8ad8"></div>
+      <div class="ground" style="background:linear-gradient(180deg,#4a4560,#241a2e)"></div>
+    </div><div class="meta"><span class="n">MOON DINER</span><span class="v">FLUX·v13</span></div></div>
+    <div class="vcell"><div class="art" style="background:radial-gradient(circle at 50% 50%,#2a0f3d,#12102a)">
+      <div class="orb" style="left:28%;top:28%;width:44%;aspect-ratio:1;background:radial-gradient(circle at 34% 30%,#ffc3e8,#e438d8 60%,#7a1f8f)"></div>
+      <div style="position:absolute;left:12%;top:44%;width:76%;height:12%;border-radius:50%;border:3px solid rgba(201,209,224,.7);transform:rotate(-16deg)"></div>
+    </div><div class="meta"><span class="n">CHROME ORBIT</span><span class="v">FLUX·v16</span></div></div>
+  </section>
+  <div class="section-band reveal" style="padding-top:clamp(26px,3.4vw,44px)">
+    <span class="mono-label"><span class="dot" style="background:var(--orange)"></span>03 — On shelf, hero pack shots</span>
+  </div>
+  <section class="cgrid shelf3 reveal">
+    <div class="cell shot"><div class="bg" style="background:radial-gradient(circle at 50% 30%,#e438d8,#2a0f3d 75%)"></div>
+      <div class="mini-pack" style="width:52%"><div class="pack" style="position:relative;inset:auto;width:100%;animation:none"><div class="roll"></div><div class="label"><span class="tiny">Fruity</span><span class="name" style="font-size:22px">Space<span>Bandit</span></span></div><div class="shine"></div></div></div>
+      <div class="pedestal"></div>
+    </div>
+    <div class="cell shot"><div class="bg" style="background:radial-gradient(circle at 50% 26%,#ff8ad8,#ff3ea5 40%,#7a1f8f 85%)"></div>
+      <div class="mini-pack" style="width:46%"><div class="pack" style="position:relative;inset:auto;width:100%;animation:none"><div class="roll"></div><div class="label"><span class="tiny">Fruity</span><span class="name" style="font-size:25px">Space<span>Bandit</span></span><span class="flavor" style="font-size:11px">bubble gum tape</span></div><div class="shine"></div></div></div>
+      <div class="pedestal"></div>
+    </div>
+    <div class="cell shot"><div class="bg" style="background:linear-gradient(180deg,#12102a 0%,#b81f78 130%)"></div>
+      <div class="mini-pack" style="width:52%"><div class="pack" style="position:relative;inset:auto;width:100%;animation:none;transform:rotate(14deg)"><div class="roll"></div><div class="label"><span class="tiny">Fruity</span><span class="name" style="font-size:22px">Space<span>Bandit</span></span></div><div class="shine"></div></div></div>
+      <div class="pedestal"></div>
+    </div>
+  </section>
+  <section class="cgrid reveal" style="border-top:none">
+    <div class="cell caption-cell">
+      <span class="badge">0% photography · 100% generated</span>
+      <span class="txt">Everything above came out of the system — no product run, no studio day, no freight to the moon. That's the pitch.</span>
+    </div>
+  </section>
+</div>
+
+<!-- ======= WHAT WE COOK ======= -->
+<div class="shell" id="capabilities">
+  <div class="section-band reveal">
+    <span class="mono-label">[ Capabilities ]</span>
+    <h2>On the menu. <span class="script">everything made to order</span></h2>
+  </div>
+  <section class="cgrid what-grid reveal">
+    <div class="cell black-cell">
+      <div><span class="big">What</span><br><span class="script">we cook</span></div>
+      <p>Not a plug-in filter. A full generative kitchen for food &amp; bev brands — every format a launch needs, art-directed by humans with taste.</p>
+    </div>
+    <div class="cell feat"><h3><span class="glyph">✦</span>Product &amp; Packaging Renders</h3><p>Glossy pack shots, lit like the top shelf.</p><div class="chips"><span class="pill">Pack Faces</span><span class="pill">Hero Shots</span></div></div>
+    <div class="cell feat"><h3><span class="glyph">◐</span>Lifestyle &amp; Environments</h3><p>Your product, anywhere — kitchens, cookouts, craters.</p><div class="chips"><span class="pill">Scenes</span><span class="pill">Even The Moon</span></div></div>
+    <div class="cell feat"><h3><span class="glyph">☻</span>Characters &amp; Mascots</h3><p>Spokescreatures your shoppers will actually remember.</p><div class="chips"><span class="pill">Mascots</span><span class="pill">Menu Appeal</span></div></div>
+    <div class="cell feat"><h3><span class="glyph">▤</span>Storyboards</h3><p>Whole campaigns sketched while the coffee's still hot.</p><div class="chips"><span class="pill">Frames</span><span class="pill">Before Lunch</span></div></div>
+    <div class="cell feat"><h3><span class="glyph">▶</span>Motion &amp; Video</h3><p>Stills that learned to move — spots, socials, loops.</p><div class="chips"><span class="pill">Spots</span><span class="pill">Loops</span></div></div>
+    <div class="cell feat"><h3><span class="glyph">∞</span>3D Worldbuilding</h3><p>Entire branded universes, built to sell candy.</p><div class="chips"><span class="pill">Worlds</span><span class="pill">Galactic Brews</span></div></div>
+  </section>
+</div>
+
+<!-- ======= THE CHECK ======= -->
+<div class="shell" id="why">
+  <div class="section-band reveal">
+    <span class="mono-label">[ Why it matters ]</span>
+    <h2>The check. <span class="script">it's lighter than you think</span></h2>
+  </div>
+  <section class="cgrid check3 reveal">
+    <div class="cell stat"><span class="dot" style="background:var(--pink)"></span><div class="big">Weeks → days.</div><p>Traditional production timelines, pressure-cooked. Concept to finished asset while the brief is still warm.</p></div>
+    <div class="cell stat" style="background:var(--blush)"><span class="dot" style="background:var(--orange)"></span><div class="big">Iteration ≈ free.</div><p>When variations cost nearly nothing, you take more creative swings before anything goes to production.</p></div>
+    <div class="cell stat"><span class="dot" style="background:var(--purple)"></span><div class="big">No sets. No freight.</div><p>No studio days, no prop styling, no reshoots. The budget goes to ideas, not logistics.</p></div>
+  </section>
+</div>
+
+<!-- ======= CTA ======= -->
+<div class="shell cta-wrap" id="contact">
+  <section class="cta-card reveal">
+    <span class="psst">psst… hungry?</span>
+    <h2>Your table is <span class="grad-text">ready.</span></h2>
+    <p class="sub">Bring us your next product and watch it rendered — floating in a pink nebula by Friday, if that's your thing.</p>
+    <a class="btn btn-primary" href="mailto:aaron@foodcourtcreative.com?subject=Table%20for%20one%20brand%2C%20please">Book your table</a>
+  </section>
+</div>
+</div>
+<script>
+(function(){
+  var root = document.getElementById('fcc-genai');
+  if (!root) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.08});
+  root.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  root.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(ev){
+      var t = root.querySelector(a.getAttribute('href'));
+      if (t){ ev.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+    });
+  });
+})();
+</script>
