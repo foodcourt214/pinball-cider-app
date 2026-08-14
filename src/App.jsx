@@ -196,6 +196,7 @@ export default function App() {
   const [savedBatches, setSavedBatches] = useState(loadSavedBatches)
   const [loadMenuOpen, setLoadMenuOpen] = useState(false)
   const [saveFlash, setSaveFlash] = useState(false)
+  const [logoOk, setLogoOk] = useState(true)
   const loadMenuRef = useRef(null)
 
   useEffect(() => {
@@ -333,53 +334,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       <header className="border-b border-slate-700 bg-slate-800/80 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
-          <h1 className="text-lg font-bold text-amber-400 leading-tight flex-shrink-0">🍺 Pinball Cider</h1>
-
-          {/* Tabs */}
-          <nav className="flex items-center h-full flex-1 min-w-0 overflow-x-auto">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`h-full px-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                  activeTab === tab.id
-                    ? 'text-amber-400 border-amber-400'
-                    : 'text-slate-400 border-transparent hover:text-slate-200'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="flex gap-4 text-center flex-shrink-0">
-            <div>
-              <div className="text-sm font-bold text-red-400">${calc.totalCOGS.toFixed(0)}</div>
-              <div className="text-slate-500 text-xs">COGS</div>
-            </div>
-            <div>
-              <div className="text-sm font-bold text-blue-400">${blended.totalRevenue.toFixed(0)}</div>
-              <div className="text-slate-500 text-xs">Revenue</div>
-            </div>
-            <div>
-              <div className="text-sm font-bold text-emerald-400">${blended.totalProfit.toFixed(0)}</div>
-              <div className="text-slate-500 text-xs">Profit</div>
-            </div>
-            <div>
-              <div className="text-sm font-bold text-emerald-400">{blended.totalMargin}%</div>
-              <div className="text-slate-500 text-xs">Margin</div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center justify-between gap-4 py-3">
-          <span className="px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate"
-            title={recipe.batchName}>
-            {recipe.batchName}
-          </span>
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center gap-4">
+          {/* Logo — public/logo.png, falls back to the wordmark if absent */}
+          {logoOk ? (
+            <img src="/logo.png" alt="Pinball Cider" onError={() => setLogoOk(false)}
+              className="h-10 w-auto flex-shrink-0" />
+          ) : (
+            <h1 className="text-lg font-bold text-amber-400 leading-tight flex-shrink-0">🍺 Pinball Cider</h1>
+          )}
 
           {/* Save / Load / Export / Import */}
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -399,7 +361,7 @@ export default function App() {
                 📂 Load {savedNames.length > 0 && <span className="ml-1 text-amber-400">({savedNames.length})</span>}
               </button>
               {loadMenuOpen && (
-                <div className="absolute top-full right-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-52">
+                <div className="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-52">
                   {savedNames.length === 0 ? (
                     <p className="text-slate-400 text-xs px-3 py-2">No saved batches yet</p>
                   ) : savedNames.map(name => (
@@ -427,9 +389,54 @@ export default function App() {
               <input type="file" accept=".json" onChange={importBatches} className="hidden" />
             </label>
           </div>
+
+          <div className="ml-auto flex gap-4 text-center flex-shrink-0">
+            <div>
+              <div className="text-sm font-bold text-red-400">${calc.totalCOGS.toFixed(0)}</div>
+              <div className="text-slate-500 text-xs">COGS</div>
+            </div>
+            <div>
+              <div className="text-sm font-bold text-blue-400">${blended.totalRevenue.toFixed(0)}</div>
+              <div className="text-slate-500 text-xs">Revenue</div>
+            </div>
+            <div>
+              <div className="text-sm font-bold text-emerald-400">${blended.totalProfit.toFixed(0)}</div>
+              <div className="text-slate-500 text-xs">Profit</div>
+            </div>
+            <div>
+              <div className="text-sm font-bold text-emerald-400">{blended.totalMargin}%</div>
+              <div className="text-slate-500 text-xs">Margin</div>
+            </div>
+          </div>
         </div>
 
-        <div className="pb-6 pt-1">
+        {/* Batch name + tabs */}
+        <div className="max-w-6xl mx-auto px-4 h-11 flex items-center gap-3">
+          <span className="px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate flex-shrink-0 max-w-sm"
+            title={recipe.batchName}>
+            {recipe.batchName}
+          </span>
+
+          <nav className="flex items-center h-full flex-1 min-w-0 overflow-x-auto">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`h-full px-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? 'text-amber-400 border-amber-400'
+                    : 'text-slate-400 border-transparent hover:text-slate-200'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="py-6">
           {activeTab === 'recipe' && (
             <BatchRecipe recipe={recipe} setRecipe={setRecipe} calc={calc} />
           )}
