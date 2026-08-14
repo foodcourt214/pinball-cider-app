@@ -198,6 +198,7 @@ export default function App() {
   const [saveFlash, setSaveFlash] = useState(false)
   const [logoOk, setLogoOk] = useState(true)
   const loadMenuRef = useRef(null)
+  const nameInputRef = useRef(null)
 
   useEffect(() => {
     if (!loadMenuOpen) return
@@ -253,7 +254,29 @@ export default function App() {
     return { case: c, sixth: s, half: h, totalRevenue, totalProfit, totalMargin }
   }, [calc, channelMix, pricing])
 
+  // New batch — clears the recipe but keeps costs and pricing, which carry between batches
+  const newBatch = () => {
+    if (!window.confirm('Start a new batch? Unsaved changes to the current one will be lost.\n\nCost Tracking and Pricing are kept.')) return
+    setRecipe({
+      batchName: '',
+      og: '1.060',
+      sg: '1.000',
+      appleVarieties: [{ id: 1, variety: '', gallons: '', costPerGallon: '', shipping: '' }],
+      adjuncts: [{ id: 1, name: '', amount: '', unit: 'lbs', costPerUnit: '', shipping: '' }],
+    })
+    setFinalRecipe({ finalGallons: '', items: [] })
+    setMix(m => ({ ...m, finalGallonsOverride: null }))
+    setActiveTab('recipe')
+    setLoadMenuOpen(false)
+    requestAnimationFrame(() => nameInputRef.current?.focus())
+  }
+
   const saveBatch = () => {
+    if (!recipe.batchName.trim()) {
+      alert('Give the batch a name before saving.')
+      nameInputRef.current?.focus()
+      return
+    }
     const updated = { ...savedBatches, [recipe.batchName]: { recipe, costs, pricing, mix, channelMix, finalRecipe } }
     setSavedBatches(updated)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
@@ -346,6 +369,13 @@ export default function App() {
           {/* Save / Load / Export / Import */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
+              onClick={newBatch}
+              className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
+              title="Start a new batch (keeps Cost Tracking and Pricing)"
+            >
+              ➕ New
+            </button>
+            <button
               onClick={saveBatch}
               className={`text-xs px-3 py-1.5 rounded font-medium transition-colors ${
                 saveFlash ? 'bg-emerald-500 text-white' : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
@@ -412,10 +442,17 @@ export default function App() {
 
         {/* Batch name + tabs */}
         <div className="max-w-6xl mx-auto px-4 h-11 flex items-center gap-3">
-          <span className="px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate flex-shrink-0 max-w-sm"
-            title={recipe.batchName}>
-            {recipe.batchName}
-          </span>
+          <input
+            ref={nameInputRef}
+            value={recipe.batchName}
+            onChange={e => setRecipe(r => ({ ...r, batchName: e.target.value }))}
+            placeholder="Name this batch…"
+            size={Math.max(14, Math.min(34, (recipe.batchName || '').length + 2))}
+            title="Batch name — click to edit"
+            className="px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide
+              outline-none transition-colors hover:bg-amber-500/25 focus:border-amber-400 focus:bg-amber-500/25
+              placeholder:text-amber-300/40 placeholder:font-normal flex-shrink-0 max-w-sm"
+          />
 
           <nav className="flex items-center h-full flex-1 min-w-0 overflow-x-auto">
             {tabs.map(tab => (
