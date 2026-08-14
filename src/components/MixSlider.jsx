@@ -88,7 +88,12 @@ function FormatCard({ title, icon, units, gallons, blendData, cogsTotal, accentC
   )
 }
 
-export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended }) {
+export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pricing, calc, recipe, blended, recipeFinalGallons }) {
+  // null override = follow the Final Recipe tab; any string = manually adjusted here
+  const isOverridden = mix.finalGallonsOverride !== null && mix.finalGallonsOverride !== undefined
+  const recipeFinalRounded = Math.round(recipeFinalGallons || 0)
+  const setFinalGallons = val => setMix(m => ({ ...m, finalGallonsOverride: val }))
+
   // Format mix: redistribute remaining proportionally
   const handleMixChange = (key, newVal) => {
     const otherKeys = ['casePct', 'sixthPct', 'halfPct'].filter(k => k !== key)
@@ -117,14 +122,33 @@ export default function MixSlider({ mix, setMix, channelMix, setChannelMix, pric
             <h2 className="text-base font-semibold text-amber-400">Format Mix</h2>
             <p className="text-xs text-slate-500 mt-0.5">What % of the batch goes to each package format</p>
           </div>
-          <div className="flex items-center gap-4 text-right">
+          <div className="flex items-start gap-4 text-right">
             <div>
               <div className="text-xs text-slate-500">Ordered</div>
-              <div className="text-sm font-medium text-slate-300">{Math.round(calc.gallons || 0)} gal</div>
+              <div className="text-sm font-medium text-slate-300 py-1">{Math.round(calc.gallons || 0)} gal</div>
             </div>
             <div>
               <div className="text-xs text-slate-500">Final</div>
-              <div className="text-sm font-medium text-amber-400">{Math.round(calc.packagingGallons || 0)} gal</div>
+              <div className="flex items-center bg-slate-700 border border-slate-600 rounded focus-within:border-amber-400">
+                <input
+                  type="number" min="0" step="1"
+                  value={isOverridden ? mix.finalGallonsOverride : recipeFinalRounded}
+                  onChange={e => setFinalGallons(e.target.value)}
+                  placeholder={recipeFinalRounded}
+                  title="Final gallons actually packaged — starts from the Final Recipe tab, adjust here for extra loss"
+                  className="bg-transparent pl-2 pr-4 py-1 text-sm font-medium text-amber-400 outline-none w-20 text-right"
+                />
+                <span className="px-2 text-slate-400 text-xs">gal</span>
+              </div>
+              {isOverridden && (
+                <button
+                  onClick={() => setFinalGallons(null)}
+                  className="text-xs text-slate-500 hover:text-amber-400 mt-0.5"
+                  title={`Reset to the Final Recipe value (${recipeFinalRounded} gal)`}
+                >
+                  ↺ adjusted · reset to {recipeFinalRounded}
+                </button>
+              )}
             </div>
           </div>
         </div>

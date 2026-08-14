@@ -186,7 +186,7 @@ export default function App() {
   const [recipe, setRecipe] = useState(INITIAL_RECIPE)
   const [costs, setCosts] = useState(INITIAL_COSTS)
   const [pricing, setPricing] = useState(INITIAL_PRICING)
-  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15 })
+  const [mix, setMix] = useState({ casePct: 60, sixthPct: 25, halfPct: 15, finalGallonsOverride: null })
   const [finalRecipe, setFinalRecipe] = useState(() => ({
     finalGallons: '',
     items: INITIAL_RECIPE.adjuncts.map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
@@ -209,18 +209,29 @@ export default function App() {
     return () => document.removeEventListener('mousedown', handler)
   }, [loadMenuOpen])
 
+  const orderedGallons = useMemo(
+    () => recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0),
+    [recipe]
+  )
+
   const finalGallonsTotal = useMemo(() => {
-    const ordGal = recipe.appleVarieties.reduce((s, v) => s + (parseFloat(v.gallons) || 0), 0)
     const adjGal = (finalRecipe.items || [])
       .filter(i => i.unit === 'gal')
       .reduce((s, i) => s + (parseFloat(i.amount) || 0), 0)
     const hasJuice = parseFloat(finalRecipe.finalGallons) > 0
-    const juiceBase = hasJuice ? parseFloat(finalRecipe.finalGallons) : ordGal
+    const juiceBase = hasJuice ? parseFloat(finalRecipe.finalGallons) : orderedGallons
     if (!hasJuice && adjGal === 0) return 0  // nothing entered — fall back to ordered in calcBatch
     return juiceBase + adjGal
-  }, [finalRecipe, recipe])
+  }, [finalRecipe, orderedGallons])
 
-  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, finalGallonsTotal), [recipe, costs, pricing, mix, finalGallonsTotal])
+  // What the Final Recipe tab arrives at — the starting value shown in Mix & Profit
+  const recipeFinalGallons = finalGallonsTotal > 0 ? finalGallonsTotal : orderedGallons
+
+  // Mix & Profit can override it for extra loss discovered at packaging
+  const overrideGallons = parseFloat(mix.finalGallonsOverride)
+  const packagingGallons = overrideGallons > 0 ? overrideGallons : finalGallonsTotal
+
+  const calc = useMemo(() => calcBatch(recipe, costs, pricing, mix, packagingGallons), [recipe, costs, pricing, mix, packagingGallons])
 
   // Blended revenue/profit based on PTW/PTR channel split
   const blended = useMemo(() => {
@@ -261,7 +272,7 @@ export default function App() {
     setRecipe(recipe)
     setCosts(b.costs)
     setPricing(b.pricing)
-    setMix({ casePct: 60, sixthPct: 25, halfPct: 15, ...(b.mix || {}) })
+    setMix({ casePct: 60, sixthPct: 25, halfPct: 15, finalGallonsOverride: null, ...(b.mix || {}) })
     setFinalRecipe(b.finalRecipe || {
       finalGallons: b.mix?.finalGallons || '',
       items: (b.recipe.adjuncts || []).map((a, i) => ({ id: i + 1, name: a.name, amount: '', unit: a.unit })),
@@ -323,59 +334,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-900 text-slate-100">
       <header className="border-b border-slate-700 bg-slate-800/80 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
-            <div>
-              <h1 className="text-xl font-bold text-amber-400 leading-tight">🍺 Pinball Cider</h1>
-              <p className="text-slate-400 text-xs truncate">Batch Calculator — {recipe.batchName}</p>
-            </div>
-            {/* Save / Load */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={saveBatch}
-                className={`text-xs px-3 py-1.5 rounded font-medium transition-colors ${
-                  saveFlash ? 'bg-emerald-500 text-white' : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
-                }`}
-              >
-                {saveFlash ? '✓ Saved' : '💾 Save'}
-              </button>
-              <div className="relative" ref={loadMenuRef}>
-                <button
-                  onClick={() => setLoadMenuOpen(o => !o)}
-                  className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
-                >
-                  📂 Load {savedNames.length > 0 && <span className="ml-1 text-amber-400">({savedNames.length})</span>}
-                </button>
-                {loadMenuOpen && (
-                  <div className="absolute top-full left-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-52">
-                    {savedNames.length === 0 ? (
-                      <p className="text-slate-400 text-xs px-3 py-2">No saved batches yet</p>
-                    ) : savedNames.map(name => (
-                      <div key={name} className="flex items-center justify-between hover:bg-slate-700 px-3 py-2 cursor-pointer"
-                        onMouseDown={() => loadBatch(name)}>
-                        <span className="text-sm text-slate-200 truncate">{name}</span>
-                        <button
-                          onMouseDown={e => { e.stopPropagation(); deleteBatch(name, e) }}
-                          className="ml-3 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:bg-red-500 hover:text-white text-sm font-bold transition-colors"
-                          title="Delete"
-                        >×</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              {/* Export / Import */}
-              <button onClick={exportBatches}
-                className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
-                title="Download all saved batches as JSON">
-                ⬇ Export
-              </button>
-              <label className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 cursor-pointer"
-                title="Import batches from JSON file">
-                ⬆ Import
-                <input type="file" accept=".json" onChange={importBatches} className="hidden" />
-              </label>
-            </div>
-          </div>
+          <h1 className="text-xl font-bold text-amber-400 leading-tight">🍺 Pinball Cider</h1>
 
           <div className="flex gap-4 text-center flex-shrink-0">
             <div>
@@ -399,12 +358,17 @@ export default function App() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex border-b border-slate-700 mt-1">
+        <div className="flex items-center flex-wrap gap-y-2 border-b border-slate-700 mt-1">
+          <span className="mr-3 px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate max-w-56"
+            title={recipe.batchName}>
+            {recipe.batchName}
+          </span>
+
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-3 text-sm font-medium transition-colors ${
+              className={`px-3 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'text-amber-400 border-b-2 border-amber-400'
                   : 'text-slate-400 hover:text-slate-200'
@@ -413,6 +377,53 @@ export default function App() {
               {tab.label}
             </button>
           ))}
+
+          {/* Save / Load / Export / Import */}
+          <div className="ml-auto flex items-center gap-2 pl-4">
+            <button
+              onClick={saveBatch}
+              className={`text-xs px-3 py-1.5 rounded font-medium transition-colors ${
+                saveFlash ? 'bg-emerald-500 text-white' : 'bg-slate-700 hover:bg-slate-600 text-slate-300'
+              }`}
+            >
+              {saveFlash ? '✓ Saved' : '💾 Save'}
+            </button>
+            <div className="relative" ref={loadMenuRef}>
+              <button
+                onClick={() => setLoadMenuOpen(o => !o)}
+                className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
+              >
+                📂 Load {savedNames.length > 0 && <span className="ml-1 text-amber-400">({savedNames.length})</span>}
+              </button>
+              {loadMenuOpen && (
+                <div className="absolute top-full right-0 mt-1 bg-slate-800 border border-slate-600 rounded-lg shadow-xl z-50 min-w-52">
+                  {savedNames.length === 0 ? (
+                    <p className="text-slate-400 text-xs px-3 py-2">No saved batches yet</p>
+                  ) : savedNames.map(name => (
+                    <div key={name} className="flex items-center justify-between hover:bg-slate-700 px-3 py-2 cursor-pointer"
+                      onMouseDown={() => loadBatch(name)}>
+                      <span className="text-sm text-slate-200 truncate">{name}</span>
+                      <button
+                        onMouseDown={e => { e.stopPropagation(); deleteBatch(name, e) }}
+                        className="ml-3 flex-shrink-0 w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:bg-red-500 hover:text-white text-sm font-bold transition-colors"
+                        title="Delete"
+                      >×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={exportBatches}
+              className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300"
+              title="Download all saved batches as JSON">
+              ⬇ Export
+            </button>
+            <label className="text-xs px-3 py-1.5 rounded font-medium bg-slate-700 hover:bg-slate-600 text-slate-300 cursor-pointer"
+              title="Import batches from JSON file">
+              ⬆ Import
+              <input type="file" accept=".json" onChange={importBatches} className="hidden" />
+            </label>
+          </div>
         </div>
 
         <div className="py-6">
@@ -430,7 +441,8 @@ export default function App() {
           )}
           {activeTab === 'mix' && (
             <MixSlider mix={mix} setMix={setMix} channelMix={channelMix} setChannelMix={setChannelMix}
-              pricing={pricing} calc={calc} recipe={recipe} blended={blended} />
+              pricing={pricing} calc={calc} recipe={recipe} blended={blended}
+              recipeFinalGallons={recipeFinalGallons} />
           )}
         </div>
       </div>
