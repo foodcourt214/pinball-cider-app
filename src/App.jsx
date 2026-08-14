@@ -333,8 +333,25 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100">
       <header className="border-b border-slate-700 bg-slate-800/80 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <h1 className="text-xl font-bold text-amber-400 leading-tight">🍺 Pinball Cider</h1>
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
+          <h1 className="text-lg font-bold text-amber-400 leading-tight flex-shrink-0">🍺 Pinball Cider</h1>
+
+          {/* Tabs */}
+          <nav className="flex items-center h-full flex-1 min-w-0 overflow-x-auto">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`h-full px-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? 'text-amber-400 border-amber-400'
+                    : 'text-slate-400 border-transparent hover:text-slate-200'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
 
           <div className="flex gap-4 text-center flex-shrink-0">
             <div>
@@ -358,28 +375,14 @@ export default function App() {
       </header>
 
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex items-center flex-wrap gap-y-2 border-b border-slate-700 mt-1">
-          <span className="mr-3 px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate max-w-56"
+        <div className="flex items-center justify-between gap-4 py-3">
+          <span className="px-3 py-1 rounded-md bg-amber-500/15 border border-amber-500/40 text-amber-300 text-base font-bold tracking-wide truncate"
             title={recipe.batchName}>
             {recipe.batchName}
           </span>
 
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-3 text-sm font-medium transition-colors ${
-                activeTab === tab.id
-                  ? 'text-amber-400 border-b-2 border-amber-400'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-
           {/* Save / Load / Export / Import */}
-          <div className="ml-auto flex items-center gap-2 pl-4">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={saveBatch}
               className={`text-xs px-3 py-1.5 rounded font-medium transition-colors ${
@@ -426,7 +429,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="py-6">
+        <div className="pb-6 pt-1">
           {activeTab === 'recipe' && (
             <BatchRecipe recipe={recipe} setRecipe={setRecipe} calc={calc} />
           )}
